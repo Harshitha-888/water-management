@@ -1,0 +1,655 @@
+{
+  "clusterName": "AquaAI-Karnataka-HDFS",
+  "replicationFactor": 2,
+  "blockSizeRecords": 6,
+  "nextIds": {
+    "water_records": 131,
+    "reservoirs": 76,
+    "emergency_requests": 9,
+    "uploaded_datasets": 7,
+    "transport_deliveries": 8,
+    "dataset_files": 85,
+    "maintenance_tasks": 14
+  },
+  "nodes": [
+    {
+      "id": "node-01",
+      "name": "Bengaluru Primary",
+      "region": "South-East Grid",
+      "host": "10.24.1.11:9001",
+      "status": "online",
+      "lastHeartbeat": "2026-11-16T08:26:24.479Z"
+    },
+    {
+      "id": "node-02",
+      "name": "Mysuru Basin Node",
+      "region": "Cauvery Grid",
+      "host": "10.24.1.12:9002",
+      "status": "online",
+      "lastHeartbeat": "2026-11-16T08:26:24.479Z"
+    },
+    {
+      "id": "node-03",
+      "name": "Hubballi North Node",
+      "region": "Malaprabha Grid",
+      "host": "10.24.1.13:9003",
+      "status": "online",
+      "lastHeartbeat": "2026-11-16T08:26:24.480Z"
+    },
+    {
+      "id": "node-04",
+      "name": "Kalaburagi East Node",
+      "region": "Krishna Grid",
+      "host": "10.24.1.14:9004",
+      "status": "online",
+      "lastHeartbeat": "2026-11-16T08:26:24.479Z"
+    }
+  ],
+  "blocks": [
+    {
+      "blockId": "blk_res_000_1e5086",
+      "collection": "reservoirs",
+      "shardIndex": 0,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2135,
+      "checksum": "a890954629f97ece6d7973364d4348db9fb43fc443eb74373bceacc370f15067",
+      "createdAt": "2026-11-16T08:14:36.226Z"
+    },
+    {
+      "blockId": "blk_res_001_755979",
+      "collection": "reservoirs",
+      "shardIndex": 1,
+      "primaryNode": "node-04",
+      "replicaNodes": [
+        "node-01"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2157,
+      "checksum": "6f302e23911c7ec8746f1fe1f343c5a0cded41c8e78f63bd808ecba0f762937a",
+      "createdAt": "2026-11-16T08:14:36.232Z"
+    },
+    {
+      "blockId": "blk_res_002_1f4104",
+      "collection": "reservoirs",
+      "shardIndex": 2,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2196,
+      "checksum": "9c894a4197d730dcfcdebf29a6f82aa12f8ffcfdd93552298c297d70a98ed613",
+      "createdAt": "2026-11-16T08:14:36.233Z"
+    },
+    {
+      "blockId": "blk_res_003_6f94a2",
+      "collection": "reservoirs",
+      "shardIndex": 3,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2107,
+      "checksum": "1ff013e5a9dbc0fce8f5655d7755c538e0883d1fe3f07ca0205dd9d1b2d0621f",
+      "createdAt": "2026-11-16T08:14:36.233Z"
+    },
+    {
+      "blockId": "blk_res_004_58719a",
+      "collection": "reservoirs",
+      "shardIndex": 4,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2108,
+      "checksum": "2e22b5e6a9d0cc795b0973eb6bfb7a42093bf287e022028e80152997cb2f9691",
+      "createdAt": "2026-11-16T08:14:36.233Z"
+    },
+    {
+      "blockId": "blk_res_005_0ab36e",
+      "collection": "reservoirs",
+      "shardIndex": 5,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2139,
+      "checksum": "9491e4b6fccccbb5852e2c25678ea57ba5e8ce105007448e519c8d25a555679e",
+      "createdAt": "2026-11-16T08:14:36.233Z"
+    },
+    {
+      "blockId": "blk_res_006_33d817",
+      "collection": "reservoirs",
+      "shardIndex": 6,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 5,
+      "sizeBytes": 1844,
+      "checksum": "2548c58bde135a014553d7e44ad5343bef4cfd7a488ee00b4f50461540fb9988",
+      "createdAt": "2026-11-16T08:14:36.233Z"
+    },
+    {
+      "blockId": "blk_emg_000_45d03b",
+      "collection": "emergency_requests",
+      "shardIndex": 0,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 3236,
+      "checksum": "1b6ebb4f1e71e869f0e5703f4a72f9a34fda24a32de5b8eeed2805e4bc881313",
+      "createdAt": "2026-11-16T08:14:36.234Z"
+    },
+    {
+      "blockId": "blk_emg_001_d37d23",
+      "collection": "emergency_requests",
+      "shardIndex": 1,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 2,
+      "sizeBytes": 1114,
+      "checksum": "e3a882bff7d4333e491b150bba1dba2c691b428ec9643524d9618f62d32e88b8",
+      "createdAt": "2026-11-16T08:14:36.234Z"
+    },
+    {
+      "blockId": "blk_trn_000_ed455c",
+      "collection": "transport_deliveries",
+      "shardIndex": 0,
+      "primaryNode": "node-03",
+      "replicaNodes": [
+        "node-04"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 3461,
+      "checksum": "153bca6914b3e54fa88dcc15b13817aa8ae853760bc57a5c9d5721869a8c6384",
+      "createdAt": "2026-11-16T08:14:36.235Z"
+    },
+    {
+      "blockId": "blk_trn_001_856c3e",
+      "collection": "transport_deliveries",
+      "shardIndex": 1,
+      "primaryNode": "node-04",
+      "replicaNodes": [
+        "node-01"
+      ],
+      "recordCount": 1,
+      "sizeBytes": 677,
+      "checksum": "513fac85cf30a37326c7ee2bef0f5b363d2803c459c8a88189fe1dea5e68496d",
+      "createdAt": "2026-11-16T08:14:36.235Z"
+    },
+    {
+      "blockId": "blk_wr_000_00cf47",
+      "collection": "water_records",
+      "shardIndex": 0,
+      "primaryNode": "node-04",
+      "replicaNodes": [
+        "node-01"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1930,
+      "checksum": "62843099465a67c09587f22bf11007adfd47d23c293149e9913440822065bcf4",
+      "createdAt": "2026-11-16T08:24:06.774Z"
+    },
+    {
+      "blockId": "blk_wr_001_286d4b",
+      "collection": "water_records",
+      "shardIndex": 1,
+      "primaryNode": "node-03",
+      "replicaNodes": [
+        "node-04"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1936,
+      "checksum": "1283ded8be7d206749e83263381c456d9276a6e71c39c3ae8a966f6f4ef1178a",
+      "createdAt": "2026-11-16T08:24:06.774Z"
+    },
+    {
+      "blockId": "blk_wr_002_d6d5a1",
+      "collection": "water_records",
+      "shardIndex": 2,
+      "primaryNode": "node-03",
+      "replicaNodes": [
+        "node-04"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1915,
+      "checksum": "fafc023a3f2c2532298f9ba52f3bc643eadd4f4513257a1c465ccbda1c357fa6",
+      "createdAt": "2026-11-16T08:24:06.775Z"
+    },
+    {
+      "blockId": "blk_wr_003_8786cd",
+      "collection": "water_records",
+      "shardIndex": 3,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1927,
+      "checksum": "9eb4d736a4b4b0b3b5cd8dfbfedd11858a949f519929f08a195073058bc7c736",
+      "createdAt": "2026-11-16T08:24:06.775Z"
+    },
+    {
+      "blockId": "blk_wr_004_92b695",
+      "collection": "water_records",
+      "shardIndex": 4,
+      "primaryNode": "node-03",
+      "replicaNodes": [
+        "node-04"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1931,
+      "checksum": "cda17b90f6a2db7fafc51303f02b106127b37a298908c03e4041bfbf6f89dc1b",
+      "createdAt": "2026-11-16T08:24:06.775Z"
+    },
+    {
+      "blockId": "blk_wr_005_935ff0",
+      "collection": "water_records",
+      "shardIndex": 5,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1993,
+      "checksum": "14f09b4271116f4c8587c6f0215699d1a1dd9ca8c62e3c1d86375c4d41b0ffeb",
+      "createdAt": "2026-11-16T08:24:06.776Z"
+    },
+    {
+      "blockId": "blk_wr_006_cd5328",
+      "collection": "water_records",
+      "shardIndex": 6,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1937,
+      "checksum": "597f070e742f07444c965c402f710209a91b2bb6ded607d7b5f1d802bad25f35",
+      "createdAt": "2026-11-16T08:24:06.802Z"
+    },
+    {
+      "blockId": "blk_wr_007_ab9c14",
+      "collection": "water_records",
+      "shardIndex": 7,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1982,
+      "checksum": "247e4b770e85da83d8b0ee1889e25a6caca7f298e67508e96a39ef00b3e0f21d",
+      "createdAt": "2026-11-16T08:24:06.802Z"
+    },
+    {
+      "blockId": "blk_wr_008_4d71e2",
+      "collection": "water_records",
+      "shardIndex": 8,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1966,
+      "checksum": "3906eb0576990d04713354677a483d118fdba661bb3c9082dd4a83bb9971f5ac",
+      "createdAt": "2026-11-16T08:24:06.803Z"
+    },
+    {
+      "blockId": "blk_wr_009_81d2f7",
+      "collection": "water_records",
+      "shardIndex": 9,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1926,
+      "checksum": "edd9915525337ac4623bb0686fe90a916f84e22cfc179386b7a4aebb3f541197",
+      "createdAt": "2026-11-16T08:24:06.803Z"
+    },
+    {
+      "blockId": "blk_wr_010_ed28a5",
+      "collection": "water_records",
+      "shardIndex": 10,
+      "primaryNode": "node-04",
+      "replicaNodes": [
+        "node-01"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1927,
+      "checksum": "7a443284b9a9173aa9555c77e582406365eca56c49105688812823815b3787a6",
+      "createdAt": "2026-11-16T08:24:06.803Z"
+    },
+    {
+      "blockId": "blk_wr_011_5310a4",
+      "collection": "water_records",
+      "shardIndex": 11,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1910,
+      "checksum": "97c88b59a63b6c4d3e3f2565bd3811120219c0a8417316ea8c7713fb9add13f8",
+      "createdAt": "2026-11-16T08:24:06.803Z"
+    },
+    {
+      "blockId": "blk_wr_012_522012",
+      "collection": "water_records",
+      "shardIndex": 12,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1915,
+      "checksum": "b33b25221a74b731ebb9c67b15eb307ab5f5e2fca0642bb894de126b978f452a",
+      "createdAt": "2026-11-16T08:24:06.804Z"
+    },
+    {
+      "blockId": "blk_wr_013_791d38",
+      "collection": "water_records",
+      "shardIndex": 13,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1904,
+      "checksum": "3aa3b8481ae5896700a3cb55cf6738c1d45acac57d09fbcb0abbe7284d7ab2e3",
+      "createdAt": "2026-11-16T08:24:06.804Z"
+    },
+    {
+      "blockId": "blk_wr_014_13be86",
+      "collection": "water_records",
+      "shardIndex": 14,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1922,
+      "checksum": "49ec4d7823e2d3c47409489ace5f0096c46c5722a514ed7740c5800cbacbcfa6",
+      "createdAt": "2026-11-16T08:24:06.804Z"
+    },
+    {
+      "blockId": "blk_wr_015_a2e3a6",
+      "collection": "water_records",
+      "shardIndex": 15,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1916,
+      "checksum": "7de95d97e9dd0f917b38bfab193b7812b020e941d0c7a6b283aaba2a17ca00a3",
+      "createdAt": "2026-11-16T08:24:06.806Z"
+    },
+    {
+      "blockId": "blk_wr_016_4fe517",
+      "collection": "water_records",
+      "shardIndex": 16,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1930,
+      "checksum": "fb079d0c1f5b356de8701e4617918dfe2971b878806e78b087bbdaaaabf41e5f",
+      "createdAt": "2026-11-16T08:24:06.807Z"
+    },
+    {
+      "blockId": "blk_wr_017_c8761b",
+      "collection": "water_records",
+      "shardIndex": 17,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1929,
+      "checksum": "7db632f0bd780caa7f3ab3a8930008973817dd19ba848dd7d86d4d543b5d6387",
+      "createdAt": "2026-11-16T08:24:06.807Z"
+    },
+    {
+      "blockId": "blk_wr_018_e908c0",
+      "collection": "water_records",
+      "shardIndex": 18,
+      "primaryNode": "node-04",
+      "replicaNodes": [
+        "node-01"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1901,
+      "checksum": "e0bdba9dd360c303a339da20f74bc0f2be489b160314bdcae826f5eb8aff8b74",
+      "createdAt": "2026-11-16T08:24:06.807Z"
+    },
+    {
+      "blockId": "blk_wr_019_4be770",
+      "collection": "water_records",
+      "shardIndex": 19,
+      "primaryNode": "node-03",
+      "replicaNodes": [
+        "node-04"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1940,
+      "checksum": "d6bf70629e63b27c615a61546c894d3ea76273ad4a87228b073a5685f4226f8f",
+      "createdAt": "2026-11-16T08:24:06.807Z"
+    },
+    {
+      "blockId": "blk_wr_020_26235d",
+      "collection": "water_records",
+      "shardIndex": 20,
+      "primaryNode": "node-04",
+      "replicaNodes": [
+        "node-01"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 1956,
+      "checksum": "a69386a2afce5635bc3781163b69a8d9fd7e70ced6c98dc75b1a259b2f86de2a",
+      "createdAt": "2026-11-16T08:24:06.807Z"
+    },
+    {
+      "blockId": "blk_wr_021_d4baa6",
+      "collection": "water_records",
+      "shardIndex": 21,
+      "primaryNode": "node-03",
+      "replicaNodes": [
+        "node-04"
+      ],
+      "recordCount": 3,
+      "sizeBytes": 1019,
+      "checksum": "bc809f6aaac70ea9860c5bc0ae47625e277c16c9dd90ce1255b2ec626f900496",
+      "createdAt": "2026-11-16T08:24:06.808Z"
+    },
+    {
+      "blockId": "blk_res_007_775225",
+      "collection": "reservoirs",
+      "shardIndex": 7,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 1,
+      "sizeBytes": 458,
+      "checksum": "02355fcbbc6263cabb4fd28bed6a507282af01e8098d4db4304c1d5fa1d00a98",
+      "createdAt": "2026-11-16T08:24:11.375Z"
+    },
+    {
+      "blockId": "blk_ds_000_251dfa",
+      "collection": "dataset_files",
+      "shardIndex": 0,
+      "primaryNode": "node-03",
+      "replicaNodes": [
+        "node-04"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2073,
+      "checksum": "273e771ba108722bdb68737765332433749f29cd9ad9763d2289f7faea40c0bc",
+      "createdAt": "2026-11-16T08:24:13.079Z"
+    },
+    {
+      "blockId": "blk_ds_001_e1b591",
+      "collection": "dataset_files",
+      "shardIndex": 1,
+      "primaryNode": "node-04",
+      "replicaNodes": [
+        "node-01"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2087,
+      "checksum": "43ce6d4338ba29cfbc80ec45e9fc1a147ad128e47312bc00be2c735079f4e469",
+      "createdAt": "2026-11-16T08:24:13.080Z"
+    },
+    {
+      "blockId": "blk_ds_002_23e8a6",
+      "collection": "dataset_files",
+      "shardIndex": 2,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2240,
+      "checksum": "2829e56d95284e681111d0c191d8cba6687949202424c00d308a09829f6699e4",
+      "createdAt": "2026-11-16T08:24:13.080Z"
+    },
+    {
+      "blockId": "blk_ds_003_7ef08d",
+      "collection": "dataset_files",
+      "shardIndex": 3,
+      "primaryNode": "node-03",
+      "replicaNodes": [
+        "node-04"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2181,
+      "checksum": "16e65ca1a91ee119b8d6d82c00fc5ce9544a8a07197f222aab59d5ab2efb2a8b",
+      "createdAt": "2026-11-16T08:24:13.081Z"
+    },
+    {
+      "blockId": "blk_res_008_c91a33",
+      "collection": "reservoirs",
+      "shardIndex": 8,
+      "primaryNode": "node-03",
+      "replicaNodes": [
+        "node-04"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2020,
+      "checksum": "e2884b2fb64a6f0c5ca8844e11a1de42a0e5492213f9f9aa1f74681a9496344c",
+      "createdAt": "2026-11-16T08:26:17.431Z"
+    },
+    {
+      "blockId": "blk_res_009_410db1",
+      "collection": "reservoirs",
+      "shardIndex": 9,
+      "primaryNode": "node-04",
+      "replicaNodes": [
+        "node-01"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2047,
+      "checksum": "edf91c5fce687f7e36d03bce82eee995d3f1c37275e0fde8b139615a7850facd",
+      "createdAt": "2026-11-16T08:26:17.432Z"
+    },
+    {
+      "blockId": "blk_res_010_71cb0b",
+      "collection": "reservoirs",
+      "shardIndex": 10,
+      "primaryNode": "node-01",
+      "replicaNodes": [
+        "node-02"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2036,
+      "checksum": "42094281a5b81089026fa457470bc34688d418faf572b782587fcc678e9ad4ec",
+      "createdAt": "2026-11-16T08:26:17.432Z"
+    },
+    {
+      "blockId": "blk_res_011_bf801b",
+      "collection": "reservoirs",
+      "shardIndex": 11,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2056,
+      "checksum": "2dfa5c948f9fc1a5c4ecbef3c0898e942445bd5cee7952d60880394ddb8ec8f5",
+      "createdAt": "2026-11-16T08:26:17.432Z"
+    },
+    {
+      "blockId": "blk_res_012_4f3eea",
+      "collection": "reservoirs",
+      "shardIndex": 12,
+      "primaryNode": "node-04",
+      "replicaNodes": [
+        "node-01"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 2047,
+      "checksum": "cb5c0aa43e052358172d12c78c0e319477d712891bd2abfc5772d8bb44e0a8f5",
+      "createdAt": "2026-11-16T08:26:17.432Z"
+    },
+    {
+      "blockId": "blk_res_013_4e20b2",
+      "collection": "reservoirs",
+      "shardIndex": 13,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 3,
+      "sizeBytes": 1099,
+      "checksum": "3e48b08609bdfcf5a0204b630198d770fea9a5b1c75822d6fa41af4f10e90c53",
+      "createdAt": "2026-11-16T08:26:17.433Z"
+    },
+    {
+      "blockId": "blk_mnt_000_00be56",
+      "collection": "maintenance_tasks",
+      "shardIndex": 0,
+      "primaryNode": "node-02",
+      "replicaNodes": [
+        "node-03"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 3577,
+      "checksum": "c5efd0fb49005c4a2f5e528a2edbc5ba2f0c75a405f3169781692fa4e833c93e",
+      "createdAt": "2026-11-16T08:26:24.481Z"
+    },
+    {
+      "blockId": "blk_mnt_001_1043d5",
+      "collection": "maintenance_tasks",
+      "shardIndex": 1,
+      "primaryNode": "node-04",
+      "replicaNodes": [
+        "node-01"
+      ],
+      "recordCount": 6,
+      "sizeBytes": 3658,
+      "checksum": "4b104aea2c320fc146eb5ae0b998ba052a019f9cf910cb77b5baa2a51a18fb8d",
+      "createdAt": "2026-11-16T08:26:24.482Z"
+    }
+  ],
+  "allDistrictsSeeded": true,
+  "multiAreaSeeded": true,
+  "reservoirHistorySeeded": true,
+  "emergencyHistorySeeded": true,
+  "transportHistorySeeded": true,
+  "datasetCatalogSeeded": true,
+  "maintenanceHistorySeeded": true
+}

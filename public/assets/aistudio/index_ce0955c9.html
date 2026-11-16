@@ -1,0 +1,3599 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaAI | Smart Water Management</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+
+<!-- ===================================================
+     WELCOME SCREEN
+=================================================== -->
+
+<section id="welcomeScreen" class="welcome-screen">
+    <div class="welcome-content">
+        <div class="welcome-logo">💧</div>
+        <p class="eyebrow">SMART WATER MANAGEMENT PLATFORM</p>
+        <h1>Welcome to <span>AquaAI</span></h1>
+        <p class="welcome-description">
+            Intelligent water monitoring, resource allocation
+            and emergency transportation planning.
+        </p>
+        <button class="primary-btn welcome-btn" onclick="enterDashboard()">
+            Explore Dashboard →
+        </button>
+        <div class="welcome-footer">
+            Data-driven water management for a sustainable future
+        </div>
+    </div>
+</section>
+
+
+<!-- ===================================================
+     MAIN APPLICATION
+=================================================== -->
+
+<div id="mainApp" class="main-app hidden">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">💧</div>
+            <div>
+                <h2>AquaAI</h2>
+                <small>Water Intelligence</small>
+            </div>
+        </div>
+
+        <div class="sidebar-label">MAIN MENU</div>
+
+        <nav class="navigation">
+            <button class="nav-item active" onclick="navigateTo('overview', this)">
+                <span>▦</span> Overview
+            </button>
+
+            <button class="nav-item" onclick="navigateTo('areas', this)">
+                <span>◫</span> Area Management
+            </button>
+
+            <button class="nav-item" onclick="navigateTo('reservoirs', this)">
+                <span>◉</span> Reservoirs
+            </button>
+
+            <button class="nav-item" onclick="navigateTo('emergency', this)">
+                <span>⚑</span> Emergency Requests
+            </button>
+
+            <button class="nav-item" onclick="navigateTo('transport', this)">
+                <span>⌖</span> Transportation Map
+            </button>
+
+            <button class="nav-item" onclick="navigateTo('tracking', this)">
+                <span>◎</span> Tanker Tracking
+            </button>
+
+            <button class="nav-item" onclick="navigateTo('datasets', this)">
+                <span>▤</span> Data Management
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="system-card">
+                <span class="online-dot"></span>
+                <div>
+                    <strong>System Status</strong>
+                    <small id="systemStatus">Connecting...</small>
+                </div>
+            </div>
+            <p class="sidebar-version">AquaAI · Local Development</p>
+        </div>
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="topbar-date" id="currentDate"></p>
+                <h2 id="pageTitle">Water Management Overview</h2>
+            </div>
+
+            <div class="topbar-right">
+                <span class="data-indicator">
+                    <span class="online-dot"></span>
+                    Dashboard Active
+                </span>
+
+                <button class="refresh-btn" onclick="refreshAll()">
+                    ↻ Refresh
+                </button>
+            </div>
+        </header>
+
+
+        <!-- ===================================================
+             OVERVIEW
+        =================================================== -->
+
+        <section class="page-section active" id="overview">
+
+            <div class="welcome-banner">
+                <div>
+                    <span class="banner-label">AQUAAI INTELLIGENCE CENTER</span>
+                    <h1>Water Resource Overview</h1>
+                    <p>
+                        Monitor water demand, supply, shortages,
+                        reservoir information and emergency requirements
+                        from one dashboard.
+                    </p>
+                </div>
+                <div class="banner-water">💧</div>
+            </div>
+
+
+            <!-- SUMMARY CARDS -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Total Areas</span>
+                        <span class="stat-icon blue">⌖</span>
+                    </div>
+                    <h2 id="totalAreas">0</h2>
+                    <p>Areas with uploaded records</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Total Water Demand</span>
+                        <span class="stat-icon purple">◉</span>
+                    </div>
+                    <h2 id="totalDemand">0</h2>
+                    <p>Recorded demand</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Total Water Supply</span>
+                        <span class="stat-icon green">↗</span>
+                    </div>
+                    <h2 id="totalSupply">0</h2>
+                    <p>Recorded supply</p>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Water Shortage</span>
+                        <span class="stat-icon orange">⚠</span>
+                    </div>
+                    <h2 id="totalShortage">0</h2>
+                    <p>Estimated demand minus supply</p>
+                </div>
+
+            </div>
+
+
+            <!-- OVERVIEW GRID -->
+
+            <div class="dashboard-grid">
+
+                <div class="panel large-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Area-wise Water Status</h3>
+                            <p>All recorded areas and their current uploaded measurements</p>
+                        </div>
+                        <button class="text-btn" onclick="navigateTo('areas')">
+                            View all →
+                        </button>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>District</th>
+                                    <th>Area</th>
+                                    <th>Demand</th>
+                                    <th>Supply</th>
+                                    <th>Shortage</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="overviewAreaTable">
+                                <tr>
+                                    <td colspan="6" class="empty-cell">
+                                        Loading water records...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Water Distribution</h3>
+                            <p>Demand compared with supply</p>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="overviewChart"></canvas>
+                    </div>
+
+                    <div class="chart-legend">
+                        <span><i class="legend-dot demand-dot"></i> Demand</span>
+                        <span><i class="legend-dot supply-dot"></i> Supply</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- GOVERNMENT WATER DATA -->
+
+<div class="panel section-gap" id="governmentWaterPanel">
+
+    <div class="panel-heading">
+        <div>
+            <h3>Government Water Intelligence</h3>
+            <p>Public observations from the National Water Data Portal</p>
+        </div>
+
+        <button class="secondary-btn" onclick="loadPublicWaterData()">
+            ↻ Refresh Data
+        </button>
+    </div>
+
+    <div class="stats-grid compact-stats">
+
+        <div class="stat-card">
+            <span>Government Datasets</span>
+            <h2 id="governmentDatasetCount">0</h2>
+            <p>Available datasets</p>
+        </div>
+
+        <div class="stat-card">
+            <span>Reservoir Alerts</span>
+            <h2 id="governmentAlertCount">0</h2>
+            <p>Unique reservoirs requiring attention</p>
+        </div>
+
+        <div class="stat-card">
+            <span>High Priority</span>
+            <h2 id="governmentHighAlerts">0</h2>
+            <p>High severity alerts</p>
+        </div>
+
+    </div>
+
+    <div id="governmentDataStatus" class="info-banner">
+        Connecting to public water data...
+    </div>
+
+    <h3 style="margin:20px 0 12px;">Government Reservoir Alerts</h3>
+
+    <div id="governmentAlerts" class="reservoir-grid">
+        <div class="loading-message">Loading government observations...</div>
+    </div>
+
+    <h3 style="margin:25px 0 12px;">Government Data Catalogue</h3>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Dataset</th>
+                    <th>Observation Frequency</th>
+                    <th>Description</th>
+                    <th>AquaAI Check Interval</th>
+                </tr>
+            </thead>
+
+            <tbody id="governmentDatasetTable">
+                <tr>
+                    <td colspan="4" class="empty-cell">Loading catalogue...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p class="note">
+        Source: National Water Data Portal.
+        AquaAI refresh intervals indicate how often the application checks
+        for updated information, not how often the government measures water.
+    </p>
+
+    <p>
+        <a href="https://nwdp.nwic.gov.in/" target="_blank" rel="noopener">
+            Open National Water Data Portal →
+        </a>
+    </p>
+
+</div>
+
+<!-- ===================================================
+     WATER USAGE INTELLIGENCE
+=================================================== -->
+
+<div class="panel section-gap" id="waterUsageIntelligence">
+
+    <div class="panel-heading">
+        <div>
+            <h3>Water Usage & Requirement Intelligence</h3>
+            <p>Daily, weekly and monthly analysis in litres</p>
+        </div>
+
+        <button class="secondary-btn" onclick="renderUsageAnalysis()">
+            ↻ Recalculate
+        </button>
+    </div>
+
+    <div class="filter-bar">
+        <label for="usagePeriod"><strong>Analysis period:</strong></label>
+
+        <select id="usagePeriod" onchange="renderUsageAnalysis()">
+            <option value="daily">Daily analysis</option>
+            <option value="weekly">Weekly analysis</option>
+            <option value="monthly">Monthly analysis</option>
+        </select>
+    </div>
+
+    <div class="stats-grid compact-stats">
+
+        <div class="stat-card">
+            <span>Water Supplied</span>
+            <h2 id="usageSupply">0 L</h2>
+            <p>Recorded supply</p>
+        </div>
+
+        <div class="stat-card">
+            <span>Water Consumed</span>
+            <h2 id="usageConsumed">Unavailable</h2>
+            <p id="consumptionDataNote">Consumption measurements not recorded</p>
+        </div>
+
+        <div class="stat-card">
+            <span>Water Required</span>
+            <h2 id="usageDemand">0 L</h2>
+            <p>Recorded demand</p>
+        </div>
+
+        <div class="stat-card">
+            <span>Additional Water Required</span>
+            <h2 id="usageShortage">0 L</h2>
+            <p>Calculated shortage</p>
+        </div>
+
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h3>Supply vs Demand</h3>
+                    <p id="usageChartDescription">Selected period comparison</p>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="usageComparisonChart"></canvas>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h3>Water Availability</h3>
+                    <p>Percentage of recorded demand covered by supply</p>
+                </div>
+            </div>
+
+            <div style="padding:20px 5px;">
+                <h2 id="supplyCoverage" style="font-size:36px;">0%</h2>
+
+                <div class="progress-track" style="margin-top:15px;">
+                    <div id="supplyCoverageBar"
+                         class="progress-fill"
+                         style="width:0%;">
+                    </div>
+                </div>
+
+                <p id="coverageMessage" class="note" style="margin-top:15px;">
+                    Waiting for water measurements.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="panel section-gap">
+        <div class="panel-heading">
+            <div>
+                <h3>Water Usage Recommendations</h3>
+                <p>Actions based on recorded demand and supply</p>
+            </div>
+        </div>
+
+        <div id="waterRecommendations" class="request-list">
+            <div class="loading-message">
+                Waiting for water measurements...
+            </div>
+        </div>
+    </div>
+
+    <div class="panel section-gap">
+        <div class="panel-heading">
+            <div>
+                <h3>Area-wise Water Requirement Analysis</h3>
+                <p>Demand, supply, consumption and shortage by area</p>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>District</th>
+                        <th>Area</th>
+                        <th>Demand (L)</th>
+                        <th>Supply (L)</th>
+                        <th>Consumed (L)</th>
+                        <th>Shortage (L)</th>
+                        <th>Coverage</th>
+                        <th>Recommendation</th>
+                    </tr>
+                </thead>
+
+                <tbody id="usageAreaTable">
+                    <tr>
+                        <td colspan="8" class="empty-cell">
+                            Loading water analysis...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <p class="note">
+        All quantities are displayed in litres. Daily, weekly and monthly
+        totals are calculated from the dates available in your water records.
+        Consumption is shown only when a consumption field is present.
+    </p>
+
+</div>
+            <!-- DISTRICT DIRECTORY -->
+
+            <div class="panel section-gap">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Karnataka District Coverage</h3>
+                        <p>Measurement availability across all 31 districts</p>
+                    </div>
+                    <span class="neutral-tag" id="districtCount">31 Districts</span>
+                </div>
+
+                <div class="district-grid" id="districtGrid">
+                    <div class="loading-message">Loading district information...</div>
+                </div>
+
+                <p class="note">
+                    District names are a directory. A district without uploaded
+                    measurements is not assigned an assumed water status.
+                </p>
+            </div>
+
+
+            <!-- RESERVOIR SNAPSHOT -->
+
+            <div class="panel section-gap">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Reservoir Snapshot</h3>
+                        <p>Latest reservoir observations entered into AquaAI</p>
+                    </div>
+                    <button class="text-btn" onclick="navigateTo('reservoirs')">
+                        View details →
+                    </button>
+                </div>
+
+                <div class="reservoir-grid" id="overviewReservoirs">
+                    <div class="loading-message">Loading reservoir records...</div>
+                </div>
+            </div>
+
+
+            <!-- EMERGENCY SNAPSHOT -->
+
+            <div class="panel section-gap">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Emergency Water Requests</h3>
+                        <p>Recent water supply requirements</p>
+                    </div>
+                    <button class="text-btn" onclick="navigateTo('emergency')">
+                        Manage requests →
+                    </button>
+                </div>
+
+                <div id="overviewEmergency" class="request-list">
+                    <div class="loading-message">Loading requests...</div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ===================================================
+             AREA MANAGEMENT
+        =================================================== -->
+
+        <section class="page-section" id="areas">
+
+            <div class="section-intro">
+                <h2>Area Water Management</h2>
+                <p>Review the recorded water demand and supply for each area.</p>
+            </div>
+
+            <div class="filter-bar">
+                <input type="text" id="areaSearch"
+                       placeholder="Search district or area..."
+                       oninput="renderAreaTable()">
+
+                <button class="secondary-btn" onclick="loadWaterData()">
+                    ↻ Refresh Records
+                </button>
+            </div>
+
+            <div class="stats-grid compact-stats">
+                <div class="stat-card">
+                    <span>Recorded Areas</span>
+                    <h2 id="areaTotalCount">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Total Demand</span>
+                    <h2 id="areaTotalDemand">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Total Supply</span>
+                    <h2 id="areaTotalSupply">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Total Shortage</span>
+                    <h2 id="areaTotalShortage">0</h2>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>All Area Records</h3>
+                        <p>Water status calculated from uploaded measurements</p>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>District</th>
+                                <th>Area</th>
+                                <th>Demand</th>
+                                <th>Supply</th>
+                                <th>Shortage</th>
+                                <th>Water Level</th>
+                                <th>Quality</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="areaTable">
+                            <tr>
+                                <td colspan="9" class="empty-cell">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ===================================================
+             RESERVOIRS
+        =================================================== -->
+
+        <section class="page-section" id="reservoirs">
+
+            <div class="section-intro">
+                <h2>Reservoir Management</h2>
+                <p>View detailed storage, inflow and outflow observations.</p>
+            </div>
+
+            <div class="info-banner">
+                <span>ℹ</span>
+                Reservoir figures are based on uploaded or manually entered
+                observations. No physical sensors are currently connected.
+            </div>
+
+            <div class="reservoir-grid" id="reservoirGrid">
+                <div class="loading-message">Loading reservoir records...</div>
+            </div>
+
+            <div class="panel section-gap">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Detailed Reservoir Information</h3>
+                        <p>Storage and water movement measurements</p>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Reservoir</th>
+                                <th>District</th>
+                                <th>River</th>
+                                <th>Date</th>
+                                <th>Storage %</th>
+                                <th>Level</th>
+                                <th>Live Capacity</th>
+                                <th>Inflow</th>
+                                <th>Outflow</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservoirTable">
+                            <tr>
+                                <td colspan="9" class="empty-cell">No reservoir records available.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel section-gap">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Add Reservoir Observation</h3>
+                        <p>Enter verified reservoir measurements</p>
+                    </div>
+                </div>
+
+                <form id="reservoirForm" class="form-grid">
+
+                    <div class="form-group">
+                        <label>Reservoir Name *</label>
+                        <input name="reservoir_name" required placeholder="Reservoir name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>District</label>
+                        <select name="district" id="reservoirDistrict">
+                            <option value="">Select district</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>River</label>
+                        <input name="river" placeholder="River name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Basin</label>
+                        <input name="basin" placeholder="River basin">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Monitoring Date</label>
+                        <input name="monitoring_date" type="date" id="reservoirDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Storage Percentage (%)</label>
+                        <input name="percentage_full" type="number" min="0" max="100" step="any">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Reservoir Level</label>
+                        <input name="reservoir_level" type="number" step="any">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Design Capacity</label>
+                        <input name="design_capacity" type="number" step="any">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gross Capacity</label>
+                        <input name="gross_capacity" type="number" step="any">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Live Capacity</label>
+                        <input name="live_capacity" type="number" step="any">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Inflow</label>
+                        <input name="inflow" type="number" step="any">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Outflow</label>
+                        <input name="outflow" type="number" step="any">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Canal Withdrawal</label>
+                        <input name="canal_withdrawal" type="number" step="any">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Evaporation</label>
+                        <input name="evaporation" type="number" step="any">
+                    </div>
+
+                    <div class="form-actions full-width">
+                        <button class="primary-btn" type="submit">
+                            Save Reservoir Record
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </section>
+
+
+        <!-- ===================================================
+             EMERGENCY REQUESTS
+        =================================================== -->
+
+        <section class="page-section" id="emergency">
+
+            <div class="section-intro">
+                <h2>Emergency Water Management</h2>
+                <p>Create and monitor requests for urgent water supply.</p>
+            </div>
+
+            <div class="emergency-banner">
+                <div>
+                    <span class="banner-label">PRIORITY RESPONSE SYSTEM</span>
+                    <h2>Water Emergency Support</h2>
+                    <p>Record urgent water requirements and plan transportation.</p>
+                </div>
+                <span class="emergency-symbol">⚑</span>
+            </div>
+
+            <div class="panel section-gap">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Create Emergency Request</h3>
+                        <p>Enter the location and required water quantity</p>
+                    </div>
+                </div>
+
+                <form id="emergencyForm" class="form-grid">
+
+                    <div class="form-group">
+                        <label>District *</label>
+                        <select name="district" id="emergencyDistrict" required>
+                            <option value="">Select district</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Area / Village *</label>
+                        <input name="area" required placeholder="Enter area or village">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Requester Name</label>
+                        <input name="requester_name" placeholder="Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input name="contact" placeholder="Contact number">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Required Water Quantity *</label>
+                        <input name="required_quantity" type="number"
+                               min="1" step="any" required placeholder="Quantity">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select name="priority">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                            <option value="Critical">Critical</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Water Source Location</label>
+                        <input name="source_location"
+                               placeholder="Source reservoir / tanker location">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Delivery Destination *</label>
+                        <input name="destination_location" required
+                               placeholder="Village, area, district, Karnataka">
+                    </div>
+
+                    <div class="form-actions full-width">
+                        <button type="submit" class="primary-btn">
+                            + Submit Emergency Request
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+
+            <div class="stats-grid compact-stats">
+                <div class="stat-card">
+                    <span>Total Requests</span>
+                    <h2 id="requestTotal">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Requested</span>
+                    <h2 id="requestPending">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>In Transit</span>
+                    <h2 id="requestTransit">0</h2>
+                </div>
+                <div class="stat-card">
+                    <span>Delivered</span>
+                    <h2 id="requestDelivered">0</h2>
+                </div>
+            </div>
+
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Emergency Request Records</h3>
+                        <p>Track and update request progress</p>
+                    </div>
+                    <button class="secondary-btn" onclick="loadEmergencyRequests()">
+                        ↻ Refresh
+                    </button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>District</th>
+                                <th>Area</th>
+                                <th>Quantity</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Tanker ID</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="emergencyTable">
+                            <tr>
+                                <td colspan="8" class="empty-cell">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ===================================================
+             TRANSPORTATION
+        =================================================== -->
+
+        <section class="page-section" id="transport">
+
+            <div class="section-intro">
+                <h2>Water Transportation Planner</h2>
+                <p>Calculate a road route between a water source and delivery area.</p>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Route Planning</h3>
+                        <p>Enter locations to calculate the road journey</p>
+                    </div>
+                </div>
+
+                <form id="routeForm" class="route-form">
+
+                    <div class="form-group">
+                        <label>Water Source</label>
+                        <input id="routeSource" required
+                               placeholder="Example: Mysuru, Karnataka">
+                    </div>
+
+                    <div class="route-arrow">→</div>
+
+                    <div class="form-group">
+                        <label>Destination</label>
+                        <input id="routeDestination" required
+                               placeholder="Example: Mandya, Karnataka">
+                    </div>
+
+                    <button class="primary-btn" type="submit">
+                        Calculate Route
+                    </button>
+                </form>
+
+                <div id="routeResult" class="route-result hidden"></div>
+            </div>
+
+
+            <div class="panel section-gap">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Transportation Map</h3>
+                        <p>Road route and location visualization</p>
+                    </div>
+                    <span class="neutral-tag">OpenStreetMap</span>
+                </div>
+
+                <div id="routeMap" class="map-container"></div>
+
+                <p class="note">
+                    The route shows a road-network estimate. It does not include
+                    live traffic, road closures or actual tanker GPS.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- ===================================================
+             TRACKING
+        =================================================== -->
+
+        <section class="page-section" id="tracking">
+
+            <div class="section-intro">
+                <h2>Emergency Tanker Tracking</h2>
+                <p>View route progress for emergency requests.</p>
+            </div>
+
+            <div class="info-banner">
+                <span>ℹ</span>
+                Demo tracking estimates a vehicle position along a planned route.
+                It is not connected to a real vehicle GPS device.
+            </div>
+
+            <div class="panel section-gap">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Select Emergency Request</h3>
+                        <p>Start simulated tracking for a request with source and destination.</p>
+                    </div>
+                </div>
+
+                <div class="tracking-selector">
+                    <select id="trackingRequestSelect">
+                        <option value="">Select request</option>
+                    </select>
+
+                    <button class="primary-btn" onclick="startTracking()">
+                        Start Demo Tracking
+                    </button>
+
+                    <button class="secondary-btn" onclick="loadTrackingList()">
+                        ↻ Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="tracking-grid" id="trackingCards">
+                <div class="empty-state">
+                    <div>🚚</div>
+                    <h3>No tracking selected</h3>
+                    <p>Select an emergency request to view its tracking details.</p>
+                </div>
+            </div>
+
+            <div class="panel section-gap">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Tanker Route Map</h3>
+                        <p>Simulated location along the calculated road route</p>
+                    </div>
+                </div>
+
+                <div id="trackingMap" class="map-container"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ===================================================
+             DATA MANAGEMENT
+        =================================================== -->
+
+        <section class="page-section" id="datasets">
+
+            <div class="section-intro">
+                <h2>Water Data Management</h2>
+                <p>Upload datasets to analyze demand, supply and water availability.</p>
+            </div>
+
+            <div class="info-banner">
+                <span>ℹ</span>
+                Upload CSV or Excel files containing district, area,
+                water demand and water supply columns.
+            </div>
+
+            <div class="panel section-gap">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Upload Water Dataset</h3>
+                        <p>Supported formats: CSV, XLSX and XLS</p>
+                    </div>
+                </div>
+
+                <form id="uploadForm" class="upload-area">
+                    <div class="upload-icon">⇧</div>
+                    <h3>Select Water Dataset</h3>
+                    <p>Choose a CSV or Excel file from your computer.</p>
+
+                    <input type="file" id="datasetFile"
+                           name="file" accept=".csv,.xlsx,.xls" required>
+
+                    <button class="primary-btn" type="submit">
+                        Upload Dataset
+                    </button>
+
+                    <a href="/sample-csv" class="sample-link">
+                        Download sample CSV format
+                    </a>
+                </form>
+
+                <div id="uploadMessage" class="message-box hidden"></div>
+            </div>
+
+
+            <div class="panel section-gap">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Uploaded Datasets</h3>
+                        <p>Dataset upload history</p>
+                    </div>
+                    <button class="secondary-btn" onclick="loadDatasets()">
+                        ↻ Refresh
+                    </button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Filename</th>
+                                <th>Rows</th>
+                                <th>Uploaded At</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="datasetTable">
+                            <tr>
+                                <td colspan="5" class="empty-cell">No datasets uploaded yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="panel section-gap">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Data Source Information</h3>
+                        <p>Current application data connections</p>
+                    </div>
+                </div>
+
+                <div id="dataSourceInfo" class="source-grid">
+                    Loading data source information...
+                </div>
+                <div class="panel section-gap">
+    <div class="panel-heading">
+        <div>
+            <h3>Public Government Data Connections</h3>
+            <p>Dataset availability and observation schedules</p>
+        </div>
+    </div>
+
+    <div id="governmentSourceDetails" class="source-grid">
+        Loading government data connections...
+    </div>
+</div>
+            </div>
+
+        </section>
+
+
+        <footer class="main-footer">
+            <span>💧 AquaAI Smart Water Management System</span>
+            <span>Water intelligence · Resource planning · Emergency response</span>
+        </footer>
+
+    </main>
+
+</div>
+
+
+<!-- ===================================================
+     JAVASCRIPT
+=================================================== -->
+
+<script>
+
+"use strict";
+
+const API = "";
+
+let waterRecords = [];
+let waterHistoryRecords = [];
+let reservoirRecords = [];
+let emergencyRecords = [];
+let districtRecords = [];
+
+let publicWaterResponse = {};
+let publicCatalogue = [];
+let governmentAlerts = [];
+let publicDataRefreshTimer = null;
+let overviewChart = null;
+let routeMap = null;
+let trackingMap = null;
+let routeLayer = null;
+let trackingLayer = null;
+let trackingMarker = null;
+let trackingRefreshTimer = null;
+let currentTrackingId = null;
+let currentRoute = null;
+
+
+// ===================================================
+// COMMON HELPERS
+// ===================================================
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[char]);
+}
+
+
+function numberFormat(value) {
+    return Number(value || 0).toLocaleString("en-IN", {
+        maximumFractionDigits: 2
+    });
+}
+
+
+function formatDate(value) {
+    if (!value) return "—";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return escapeHTML(value);
+
+    return date.toLocaleDateString("en-IN");
+}
+
+
+function showMessage(elementId, message, type = "success") {
+    const element = document.getElementById(elementId);
+
+    if (!element) return;
+
+    element.textContent = message;
+    element.className = "message-box " + type;
+    element.classList.remove("hidden");
+}
+
+
+async function fetchJSON(url, options = {}) {
+    const response = await fetch(API + url, options);
+
+    let data;
+
+    try {
+        data = await response.json();
+    } catch {
+        throw new Error("The server returned an invalid response.");
+    }
+
+    if (!response.ok) {
+        throw new Error(data.message || data.error || "Request failed");
+    }
+
+    return data;
+}
+
+
+// ===================================================
+// WELCOME SCREEN
+// ===================================================
+
+function enterDashboard() {
+    document.getElementById("welcomeScreen").classList.add("hidden");
+    document.getElementById("mainApp").classList.remove("hidden");
+
+    sessionStorage.setItem("aquaai_entered", "true");
+
+    initializeDashboard();
+}
+
+
+// ===================================================
+// NAVIGATION
+// ===================================================
+
+const pageTitles = {
+    overview: "Water Management Overview",
+    areas: "Area Water Management",
+    reservoirs: "Reservoir Management",
+    emergency: "Emergency Water Management",
+    transport: "Transportation Planner",
+    tracking: "Tanker Tracking",
+    datasets: "Water Data Management"
+};
+
+
+function navigateTo(page, button = null) {
+    document.querySelectorAll(".page-section").forEach(section => {
+        section.classList.remove("active");
+    });
+
+    const target = document.getElementById(page);
+
+    if (!target) return;
+
+    target.classList.add("active");
+
+    document.querySelectorAll(".nav-item").forEach(item => {
+        item.classList.remove("active");
+    });
+
+    if (button) {
+        button.classList.add("active");
+    } else {
+        document.querySelectorAll(".nav-item").forEach(item => {
+            if (item.getAttribute("onclick")?.includes("'" + page + "'")) {
+                item.classList.add("active");
+            }
+        });
+    }
+
+    document.getElementById("pageTitle").textContent =
+        pageTitles[page] || "AquaAI";
+
+    if (page === "transport") {
+        setTimeout(initializeRouteMap, 200);
+    }
+
+    if (page === "tracking") {
+        setTimeout(initializeTrackingMap, 200);
+        loadTrackingList();
+    }
+}
+
+
+// ===================================================
+// DASHBOARD INITIALIZATION
+// ===================================================
+
+function initializeDashboard() {
+    document.getElementById("currentDate").textContent =
+        new Date().toLocaleDateString("en-IN", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+
+    const dateInput = document.getElementById("reservoirDate");
+    if (dateInput) {
+        dateInput.value = new Date().toISOString().slice(0, 10);
+    }
+
+    loadAllData();
+    startPublicDataRefresh();
+}
+
+
+async function loadAllData() {
+    await Promise.allSettled([
+        loadHealth(),
+        loadWaterData(),
+        loadDistricts(),
+        loadReservoirs(),
+        loadEmergencyRequests(),
+        loadDatasets(),
+        loadDataSourceInfo()
+    ]);
+}
+
+
+async function refreshAll() {
+    await loadAllData();
+}
+
+
+// ===================================================
+// HEALTH
+// ===================================================
+
+async function loadHealth() {
+    const status = document.getElementById("systemStatus");
+
+    try {
+        const data = await fetchJSON("/api/health");
+
+        status.textContent = data.status === "running"
+            ? "Backend connected"
+            : "Backend unavailable";
+
+    } catch {
+        status.textContent = "Connection issue";
+    }
+}
+
+
+// ===================================================
+// WATER RECORDS
+// ===================================================
+
+
+// ===================================================
+// NORMALIZE WATER RECORDS
+// ===================================================
+
+function normalizeWaterRecord(record) {
+
+    return {
+        id: record.id,
+
+        district: record.district || "Unknown",
+
+        area: record.area || record.district || "Unknown",
+
+        // API uses demand, not water_demand
+        water_demand: Number(
+            record.water_demand ?? record.demand ?? 0
+        ),
+
+        // API uses availability, not water_supply
+        water_supply: Number(
+            record.water_supply ?? record.availability ?? 0
+        ),
+
+        rainfall: Number(record.rainfall || 0),
+
+        recorded_at: record.recorded_at || null,
+
+        uploaded_at: record.uploaded_at || null,
+
+        source_filename: record.source_filename || ""
+    };
+}
+
+
+// ===================================================
+// KEEP THE LATEST UPLOAD FOR EACH DISTRICT
+// ===================================================
+
+function getLatestDistrictRecords(records) {
+
+    const districtMap = new Map();
+
+    records.forEach(record => {
+
+        const key = String(record.district || "")
+            .trim()
+            .toLowerCase();
+
+        if (!key) return;
+
+        const existing = districtMap.get(key);
+
+        const newDate = new Date(
+            record.uploaded_at || record.recorded_at || 0
+        );
+
+        const oldDate = existing
+            ? new Date(existing.uploaded_at || existing.recorded_at || 0)
+            : null;
+
+        if (
+            !existing ||
+            (Number.isFinite(newDate.getTime()) &&
+             (!oldDate || newDate > oldDate))
+        ) {
+            districtMap.set(key, record);
+        }
+    });
+
+    return Array.from(districtMap.values());
+}
+
+
+// ===================================================
+// LOAD WATER DATA FROM FLASK
+// ===================================================
+
+async function loadWaterData() {
+
+    try {
+
+        const response = await fetchJSON("/api/water-data");
+
+        const records = Array.isArray(response)
+            ? response
+            : (response.records || response.data || response.water_records || []);
+
+        // Convert backend field names to dashboard field names.
+        const normalizedRecords = records.map(normalizeWaterRecord);
+
+        // Prevent repeated CSV uploads from inflating totals.
+        waterHistoryRecords = normalizedRecords;
+
+waterRecords = getLatestDistrictRecords(normalizedRecords);
+        console.log("Latest district water records:", waterRecords);
+
+        renderSummary();
+
+        renderOverviewAreaTable();
+
+        renderAreaTable();
+
+        renderOverviewChart();
+
+    } catch (error) {
+
+        console.error("Water data loading error:", error);
+
+        waterRecords = [];
+
+        renderSummary();
+
+        const table = document.getElementById("overviewAreaTable");
+
+        if (table) {
+            table.innerHTML = `
+                <tr>
+                    <td colspan="6">
+                        Unable to load water records.
+                    </td>
+                </tr>
+            `;
+        }
+    }
+}
+
+
+
+function renderSummary() {
+
+    const totalDemand = waterRecords.reduce(
+        (sum, row) => sum + Number(row.water_demand || 0),
+        0
+    );
+
+    const totalSupply = waterRecords.reduce(
+        (sum, row) => sum + Number(row.water_supply || 0),
+        0
+    );
+
+    // Add the shortage of each individual district.
+    // Surplus in one district should not hide shortages elsewhere.
+    const totalShortage = waterRecords.reduce(
+        (sum, row) => sum + Math.max(
+            Number(row.water_demand || 0) -
+            Number(row.water_supply || 0),
+            0
+        ),
+        0
+    );
+
+    const areaCount = waterRecords.length;
+
+    document.getElementById("totalAreas").textContent =
+        numberFormat(areaCount);
+
+    document.getElementById("totalDemand").textContent =
+        numberFormat(totalDemand) + " L";
+
+    document.getElementById("totalSupply").textContent =
+        numberFormat(totalSupply) + " L";
+
+    document.getElementById("totalShortage").textContent =
+        numberFormat(totalShortage) + " L";
+
+    if (document.getElementById("areaTotalCount")) {
+        document.getElementById("areaTotalCount").textContent =
+            numberFormat(areaCount);
+    }
+
+    if (document.getElementById("areaTotalDemand")) {
+        document.getElementById("areaTotalDemand").textContent =
+            numberFormat(totalDemand) + " L";
+    }
+
+    if (document.getElementById("areaTotalSupply")) {
+        document.getElementById("areaTotalSupply").textContent =
+            numberFormat(totalSupply) + " L";
+    }
+
+    if (document.getElementById("areaTotalShortage")) {
+        document.getElementById("areaTotalShortage").textContent =
+            numberFormat(totalShortage) + " L";
+    }
+
+    renderUsageAnalysis();
+}
+
+// ===================================================
+// WATER USAGE INTELLIGENCE
+// ===================================================
+
+// Find consumption only when an actual consumption
+// measurement exists in the returned database record.
+
+function getConsumptionValue(record) {
+
+    const possibleFields = [
+        "water_consumed",
+        "water_usage",
+        "consumption",
+        "consumed",
+        "used_litres",
+        "consumed_litres",
+        "water_used"
+    ];
+
+    for (const field of possibleFields) {
+
+        if (
+            record[field] !== undefined &&
+            record[field] !== null &&
+            record[field] !== ""
+        ) {
+            const value = Number(record[field]);
+
+            if (Number.isFinite(value)) {
+                return value;
+            }
+        }
+    }
+
+    return null;
+}
+
+
+// Read the record's observation date.
+function getWaterRecordDate(record) {
+
+    const value =
+        record.recorded_at ||
+        record.monitoring_date ||
+        record.observation_date ||
+        record.date ||
+        record.uploaded_at ||
+        record.created_at;
+
+    if (!value) return null;
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return null;
+
+    return date;
+}
+
+
+// Get the most recent recorded date.
+// The analysis periods are calculated relative to it.
+
+function getLatestWaterDate() {
+
+    const dates = waterRecords
+        .map(getWaterRecordDate)
+        .filter(Boolean)
+        .sort((a, b) => b - a);
+
+    return dates.length ? dates[0] : null;
+}
+
+
+// Determine whether a record belongs to the selected period.
+
+function isInsideUsagePeriod(record, period, latestDate) {
+
+    const recordDate = getWaterRecordDate(record);
+
+    if (!recordDate || !latestDate) return false;
+
+    const start = new Date(latestDate);
+    const end = new Date(latestDate);
+
+    if (period === "daily") {
+
+        start.setHours(0, 0, 0, 0);
+        end.setHours(23, 59, 59, 999);
+
+        return recordDate >= start && recordDate <= end;
+    }
+
+    if (period === "weekly") {
+
+        start.setDate(start.getDate() - 6);
+        start.setHours(0, 0, 0, 0);
+
+        return recordDate >= start && recordDate <= end;
+    }
+
+    if (period === "monthly") {
+
+        start.setDate(start.getDate() - 29);
+        start.setHours(0, 0, 0, 0);
+
+        return recordDate >= start && recordDate <= end;
+    }
+
+    return false;
+}
+
+
+// Calculate totals from actual records.
+
+function calculateUsageTotals(records) {
+
+    let demand = 0;
+    let supply = 0;
+    let consumed = 0;
+    let consumptionCount = 0;
+
+    records.forEach(record => {
+
+        demand += Number(record.water_demand || 0);
+
+        supply += Number(record.water_supply || 0);
+
+        const consumption = getConsumptionValue(record);
+
+        if (consumption !== null) {
+
+            consumed += consumption;
+            consumptionCount++;
+        }
+
+    });
+
+    return {
+        demand,
+        supply,
+        consumed,
+        consumptionCount,
+        shortage: Math.max(demand - supply, 0),
+        coverage: demand > 0
+            ? Math.min((supply / demand) * 100, 100)
+            : 0
+    };
+}
+
+
+// Generate practical recommendations.
+
+function generateWaterRecommendations(totals, records) {
+
+    const recommendations = [];
+
+    if (!records.length) {
+
+        recommendations.push({
+            title: "No measurements available",
+            message: "Upload water demand and supply records with observation dates to calculate water requirements."
+        });
+
+        return recommendations;
+    }
+
+    if (totals.demand <= 0) {
+
+        recommendations.push({
+            title: "Demand data unavailable",
+            message: "Record the actual water requirement before calculating a shortage."
+        });
+
+    } else if (totals.shortage > 0) {
+
+        recommendations.push({
+            title: "Water shortage detected",
+            message:
+                numberFormat(totals.shortage) +
+                " litres of additional water are required. Review alternative verified sources and consider creating an emergency supply request."
+        });
+
+    } else {
+
+        recommendations.push({
+            title: "Recorded demand is covered",
+            message: "Recorded supply meets or exceeds recorded demand for this period. Continue monitoring consumption and distribution."
+        });
+
+    }
+
+    if (totals.coverage > 0 && totals.coverage < 60) {
+
+        recommendations.push({
+            title: "Critical supply coverage",
+            message: "Less than 60% of recorded demand is covered. Prioritise essential services and assess emergency distribution."
+        });
+
+    } else if (totals.coverage >= 60 && totals.coverage < 90) {
+
+        recommendations.push({
+            title: "Moderate supply coverage",
+            message: "Review supply allocation and identify areas that need additional water."
+        });
+
+    }
+
+    if (totals.consumptionCount === 0) {
+
+        recommendations.push({
+            title: "Consumption measurements missing",
+            message: "Add actual water-consumption readings from meters or verified usage reports. Supply figures cannot be treated as consumption."
+        });
+
+    } else {
+
+        recommendations.push({
+            title: "Consumption measurements available",
+            message:
+                totals.consumptionCount +
+                " records contain consumption measurements. Compare actual consumption with supplied water to identify unusual patterns."
+        });
+
+    }
+
+    return recommendations;
+}
+
+
+// Render the recommendations.
+
+function renderWaterRecommendations(totals, records) {
+
+    const container = document.getElementById(
+        "waterRecommendations"
+    );
+
+    const recommendations =
+        generateWaterRecommendations(totals, records);
+
+    container.innerHTML = recommendations.map(item => `
+        <div class="request-item">
+            <div class="request-item-icon">💧</div>
+
+            <div class="request-item-info">
+                <strong>${escapeHTML(item.title)}</strong>
+                <small>${escapeHTML(item.message)}</small>
+            </div>
+        </div>
+    `).join("");
+}
+
+
+// Render area-wise calculations.
+
+function renderUsageAreaTable(records) {
+
+    const tbody = document.getElementById("usageAreaTable");
+
+    if (!records.length) {
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" class="empty-cell">
+                    No measurements found for this period.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    tbody.innerHTML = records.map(record => {
+
+        const demand = Number(record.water_demand || 0);
+        const supply = Number(record.water_supply || 0);
+
+        const consumed = getConsumptionValue(record);
+
+        const shortage = Math.max(demand - supply, 0);
+
+        const coverage = demand > 0
+            ? Math.min((supply / demand) * 100, 100)
+            : 0;
+
+        let recommendation = "Review measurements";
+
+        if (demand <= 0) {
+            recommendation = "Demand data missing";
+        } else if (shortage > 0) {
+            recommendation = "Additional supply needed";
+        } else {
+            recommendation = "Continue monitoring";
+        }
+
+        return `
+            <tr>
+                <td>${escapeHTML(record.district || "—")}</td>
+
+                <td>${escapeHTML(record.area || "—")}</td>
+
+                <td>${numberFormat(demand)} L</td>
+
+                <td>${numberFormat(supply)} L</td>
+
+                <td>
+                    ${consumed === null
+                        ? "Not recorded"
+                        : numberFormat(consumed) + " L"}
+                </td>
+
+                <td>${numberFormat(shortage)} L</td>
+
+                <td>${numberFormat(coverage)}%</td>
+
+                <td>${escapeHTML(recommendation)}</td>
+            </tr>
+        `;
+
+    }).join("");
+}
+
+
+// Render the demand and supply chart.
+
+let usageComparisonChart = null;
+
+function renderUsageChart(totals, period) {
+
+    const canvas = document.getElementById(
+        "usageComparisonChart"
+    );
+
+    if (!canvas || typeof Chart === "undefined") return;
+
+    if (usageComparisonChart) {
+        usageComparisonChart.destroy();
+    }
+
+    usageComparisonChart = new Chart(canvas, {
+
+        type: "bar",
+
+        data: {
+
+            labels: [
+                "Water Demand",
+                "Water Supply",
+                "Water Shortage"
+            ],
+
+            datasets: [{
+                label: "Litres",
+                data: [
+                    totals.demand,
+                    totals.supply,
+                    totals.shortage
+                ],
+                backgroundColor: [
+                    "#8b7bea",
+                    "#18a878",
+                    "#f0a34a"
+                ],
+                borderRadius: 7
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: false
+                },
+
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return numberFormat(context.raw) + " L";
+                        }
+                    }
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: "Litres (L)"
+                    }
+                }
+            }
+
+        }
+
+    });
+
+    const descriptions = {
+        daily: "Latest observation day",
+        weekly: "Latest seven-day observation window",
+        monthly: "Latest thirty-day observation window"
+    };
+
+    document.getElementById("usageChartDescription").textContent =
+        descriptions[period];
+}
+
+
+// Main function called whenever the selected period changes.
+
+function renderUsageAnalysis() {
+
+    const periodElement = document.getElementById("usagePeriod");
+
+    if (!periodElement) return;
+
+    const period = periodElement.value;
+
+    const latestDate = getLatestWaterDate();
+
+    const filteredRecords = latestDate
+    ? waterHistoryRecords.filter(record =>
+        isInsideUsagePeriod(record, period, latestDate)
+    )
+    : [];
+
+    const totals = calculateUsageTotals(filteredRecords);
+
+    document.getElementById("usageSupply").textContent =
+        numberFormat(totals.supply) + " L";
+
+    document.getElementById("usageDemand").textContent =
+        numberFormat(totals.demand) + " L";
+
+    document.getElementById("usageShortage").textContent =
+        numberFormat(totals.shortage) + " L";
+
+    const consumptionElement =
+        document.getElementById("usageConsumed");
+
+    const consumptionNote =
+        document.getElementById("consumptionDataNote");
+
+    if (totals.consumptionCount > 0) {
+
+        consumptionElement.textContent =
+            numberFormat(totals.consumed) + " L";
+
+        consumptionNote.textContent =
+            totals.consumptionCount +
+            " records with consumption measurements";
+
+    } else {
+
+        consumptionElement.textContent = "Unavailable";
+
+        consumptionNote.textContent =
+            "Actual consumption readings are not recorded";
+    }
+
+    document.getElementById("supplyCoverage").textContent =
+        numberFormat(totals.coverage) + "%";
+
+    document.getElementById("supplyCoverageBar").style.width =
+        totals.coverage + "%";
+
+    let coverageMessage;
+
+    if (!filteredRecords.length) {
+
+        coverageMessage =
+            "No dated measurements are available for this period.";
+
+    } else if (totals.demand <= 0) {
+
+        coverageMessage =
+            "Demand information is missing for these records.";
+
+    } else if (totals.shortage > 0) {
+
+        coverageMessage =
+            numberFormat(totals.shortage) +
+            " litres of additional water are required.";
+
+    } else {
+
+        coverageMessage =
+            "Recorded supply covers the recorded demand.";
+    }
+
+    document.getElementById("coverageMessage").textContent =
+        coverageMessage;
+
+    renderUsageChart(totals, period);
+
+    renderWaterRecommendations(totals, filteredRecords);
+
+    renderUsageAreaTable(filteredRecords);
+
+}
+
+
+function getWaterStatus(record) {
+    const demand = Number(record.water_demand || 0);
+    const supply = Number(record.water_supply || 0);
+
+    if (demand <= 0) return "No Demand Data";
+
+    const percentage = supply / demand * 100;
+
+    if (percentage >= 90) return "Sufficient";
+    if (percentage >= 60) return "Moderate";
+    return "Shortage";
+}
+
+
+function statusClass(status) {
+    if (status === "Sufficient") return "status-good";
+    if (status === "Moderate") return "status-medium";
+    if (status === "Shortage") return "status-critical";
+    return "status-neutral";
+}
+
+
+function renderOverviewAreaTable() {
+    const tbody = document.getElementById("overviewAreaTable");
+
+    if (!waterRecords.length) {
+        tbody.innerHTML =
+            `<tr><td colspan="6" class="empty-cell">No water measurements uploaded yet. Upload a dataset to view area status.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = waterRecords.slice(0, 15).map(row => {
+        const demand = Number(row.water_demand || 0);
+        const supply = Number(row.water_supply || 0);
+        const shortage = Math.max(demand - supply, 0);
+        const status = getWaterStatus(row);
+
+        return `
+            <tr>
+                <td>${escapeHTML(row.district)}</td>
+                <td>${escapeHTML(row.area)}</td>
+                <td>${numberFormat(demand)} L</td>
+<td>${numberFormat(supply)} L</td>
+<td>${numberFormat(shortage)} L</td>
+                <td><span class="status-pill ${statusClass(status)}">${escapeHTML(status)}</span></td>
+            </tr>
+        `;
+    }).join("");
+}
+
+
+function renderAreaTable() {
+    const tbody = document.getElementById("areaTable");
+    const search = (
+        document.getElementById("areaSearch")?.value || ""
+    ).toLowerCase();
+
+    const filtered = waterRecords.filter(row => {
+        return (
+            String(row.district || "").toLowerCase().includes(search) ||
+            String(row.area || "").toLowerCase().includes(search)
+        );
+    });
+
+    if (!filtered.length) {
+        tbody.innerHTML =
+            `<tr><td colspan="9" class="empty-cell">No matching water records found.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(row => {
+        const demand = Number(row.water_demand || 0);
+        const supply = Number(row.water_supply || 0);
+        const shortage = Math.max(demand - supply, 0);
+        const status = getWaterStatus(row);
+
+        return `
+            <tr>
+                <td>${row.id}</td>
+                <td>${escapeHTML(row.district)}</td>
+                <td>${escapeHTML(row.area)}</td>
+                <td>${numberFormat(demand)} L</td>
+<td>${numberFormat(supply)} L</td>
+<td>${numberFormat(shortage)} L</td>
+                <td>${numberFormat(row.water_level)}%</td>
+                <td>${escapeHTML(row.water_quality || "Not recorded")}</td>
+                <td><span class="status-pill ${statusClass(status)}">${escapeHTML(status)}</span></td>
+            </tr>
+        `;
+    }).join("");
+}
+
+
+// ===================================================
+// OVERVIEW CHART
+// ===================================================
+
+function renderOverviewChart() {
+    const canvas = document.getElementById("overviewChart");
+
+    if (!canvas || typeof Chart === "undefined") return;
+
+    const totalDemand = waterRecords.reduce(
+        (sum, row) => sum + Number(row.water_demand || 0), 0
+    );
+
+    const totalSupply = waterRecords.reduce(
+        (sum, row) => sum + Number(row.water_supply || 0), 0
+    );
+
+    if (overviewChart) {
+        overviewChart.destroy();
+    }
+
+    overviewChart = new Chart(canvas, {
+        type: "doughnut",
+        data: {
+            labels: ["Water Supply", "Water Shortage"],
+            datasets: [{
+                data: [
+                    totalSupply,
+                    Math.max(totalDemand - totalSupply, 0)
+                ],
+                backgroundColor: ["#18a878", "#f0a34a"],
+                borderWidth: 0,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "68%",
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "bottom"
+                }
+            }
+        }
+    });
+}
+
+
+// ===================================================
+// DISTRICTS
+// ===================================================
+
+async function loadDistricts() {
+    try {
+        districtRecords = await fetchJSON("/api/karnataka-districts");
+
+        renderDistricts();
+        populateDistrictSelects();
+
+    } catch (error) {
+        console.error("Districts:", error);
+    }
+}
+
+
+function renderDistricts() {
+    const grid = document.getElementById("districtGrid");
+
+    document.getElementById("districtCount").textContent =
+        districtRecords.length + " Districts";
+
+    if (!districtRecords.length) {
+        grid.innerHTML = `<div class="empty-state">District information unavailable.</div>`;
+        return;
+    }
+
+    grid.innerHTML = districtRecords.map(item => `
+        <div class="district-card">
+            <div class="district-card-top">
+                <span class="district-pin">⌖</span>
+                <span class="district-indicator ${item.has_measurements ? "has-data" : ""}"></span>
+            </div>
+
+            <strong>${escapeHTML(item.district)}</strong>
+
+            <small class="${item.has_measurements ? "district-available" : "district-missing"}">
+                ${item.has_measurements ? "Measurements uploaded" : "No measurements"}
+            </small>
+        </div>
+    `).join("");
+}
+
+
+function populateDistrictSelects() {
+    const selects = [
+        document.getElementById("emergencyDistrict"),
+        document.getElementById("reservoirDistrict")
+    ];
+
+    selects.forEach(select => {
+        if (!select) return;
+
+        const previous = select.value;
+
+        select.innerHTML =
+            `<option value="">Select district</option>` +
+            districtRecords.map(item => `
+                <option value="${escapeHTML(item.district)}">
+                    ${escapeHTML(item.district)}
+                </option>
+            `).join("");
+
+        select.value = previous;
+    });
+}
+
+
+// ===================================================
+// RESERVOIRS
+// ===================================================
+
+async function loadReservoirs() {
+    try {
+        reservoirRecords = await fetchJSON("/api/reservoirs");
+
+        renderReservoirs();
+
+    } catch (error) {
+        console.error("Reservoirs:", error);
+    }
+}
+
+
+function renderReservoirs() {
+    const overview = document.getElementById("overviewReservoirs");
+    const grid = document.getElementById("reservoirGrid");
+    const tbody = document.getElementById("reservoirTable");
+
+    if (!reservoirRecords.length) {
+        const empty = `
+            <div class="empty-state">
+                <div>🏞</div>
+                <h3>No reservoir observations</h3>
+                <p>Add verified reservoir records to view storage information.</p>
+            </div>
+        `;
+
+        overview.innerHTML = empty;
+        grid.innerHTML = empty;
+        tbody.innerHTML =
+            `<tr><td colspan="9" class="empty-cell">No reservoir records available.</td></tr>`;
+        return;
+    }
+
+    const latestByName = new Map();
+
+    reservoirRecords.forEach(item => {
+        if (!latestByName.has(item.reservoir_name)) {
+            latestByName.set(item.reservoir_name, item);
+        }
+    });
+
+    const latest = Array.from(latestByName.values());
+
+    const cards = latest.map(item => {
+        const percentage = Math.max(
+            0, Math.min(100, Number(item.percentage_full || 0))
+        );
+
+        return `
+            <div class="reservoir-card">
+                <div class="reservoir-card-heading">
+                    <div class="reservoir-icon">🏞</div>
+                    <span class="neutral-tag">${escapeHTML(item.district || "District unavailable")}</span>
+                </div>
+
+                <h3>${escapeHTML(item.reservoir_name)}</h3>
+                <p>${escapeHTML(item.river || "River not recorded")}</p>
+
+                <div class="reservoir-progress-label">
+                    <span>Recorded storage</span>
+                    <strong>${numberFormat(percentage)}%</strong>
+                </div>
+
+                <div class="progress-track">
+                    <div class="progress-fill" style="width:${percentage}%"></div>
+                </div>
+
+                <div class="reservoir-details">
+                    <span>Live capacity</span>
+                    <strong>${numberFormat(item.live_capacity)}</strong>
+                </div>
+
+                <small>Observation: ${formatDate(item.monitoring_date)}</small>
+            </div>
+        `;
+    }).join("");
+
+    overview.innerHTML = cards;
+    grid.innerHTML = cards;
+
+    tbody.innerHTML = reservoirRecords.map(item => `
+        <tr>
+            <td>${escapeHTML(item.reservoir_name)}</td>
+            <td>${escapeHTML(item.district)}</td>
+            <td>${escapeHTML(item.river)}</td>
+            <td>${formatDate(item.monitoring_date)}</td>
+            <td>${numberFormat(item.percentage_full)}%</td>
+            <td>${numberFormat(item.reservoir_level)}</td>
+            <td>${numberFormat(item.live_capacity)}</td>
+            <td>${numberFormat(item.inflow)}</td>
+            <td>${numberFormat(item.outflow)}</td>
+        </tr>
+    `).join("");
+}
+
+
+// ===================================================
+// RESERVOIR FORM
+// ===================================================
+
+document.getElementById("reservoirForm").addEventListener(
+    "submit",
+    async function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            const result = await fetchJSON("/api/reservoirs", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data)
+            });
+
+            alert(result.message);
+
+            this.reset();
+
+            document.getElementById("reservoirDate").value =
+                new Date().toISOString().slice(0, 10);
+
+            await loadReservoirs();
+
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+);
+
+
+// ===================================================
+// EMERGENCY REQUESTS
+// ===================================================
+
+document.getElementById("emergencyForm").addEventListener(
+    "submit",
+    async function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            const result = await fetchJSON("/api/emergency-request", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data)
+            });
+
+            alert(
+                "Emergency request created successfully. Request ID: " +
+                result.request_id
+            );
+
+            this.reset();
+
+            await loadEmergencyRequests();
+
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+);
+
+
+async function loadEmergencyRequests() {
+    try {
+        emergencyRecords = await fetchJSON("/api/emergency-requests");
+
+        renderEmergencyRequests();
+        renderOverviewEmergency();
+        populateTrackingSelect();
+
+    } catch (error) {
+        console.error("Emergency requests:", error);
+    }
+}
+
+
+function getPriorityClass(priority) {
+    const value = String(priority || "").toLowerCase();
+
+    if (value === "critical") return "priority-critical";
+    if (value === "high") return "priority-high";
+    if (value === "medium") return "priority-medium";
+
+    return "priority-low";
+}
+
+
+function getRequestStatusClass(status) {
+    const value = String(status || "").toLowerCase();
+
+    if (value === "delivered") return "status-good";
+    if (value === "in transit") return "status-transit";
+    if (value === "assigned") return "status-medium";
+    if (value === "cancelled") return "status-neutral";
+
+    return "status-pending";
+}
+
+
+function renderEmergencyRequests() {
+    const tbody = document.getElementById("emergencyTable");
+
+    const total = emergencyRecords.length;
+    const pending = emergencyRecords.filter(
+        item => item.status === "Requested"
+    ).length;
+
+    const transit = emergencyRecords.filter(
+        item => item.status === "In Transit"
+    ).length;
+
+    const delivered = emergencyRecords.filter(
+        item => item.status === "Delivered"
+    ).length;
+
+    document.getElementById("requestTotal").textContent = total;
+    document.getElementById("requestPending").textContent = pending;
+    document.getElementById("requestTransit").textContent = transit;
+    document.getElementById("requestDelivered").textContent = delivered;
+
+    if (!total) {
+        tbody.innerHTML =
+            `<tr><td colspan="8" class="empty-cell">No emergency requests submitted yet.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = emergencyRecords.map(item => `
+        <tr>
+            <td>#${item.id}</td>
+            <td>${escapeHTML(item.district)}</td>
+            <td>${escapeHTML(item.area)}</td>
+            <td>${numberFormat(item.required_quantity)}</td>
+
+            <td>
+                <span class="priority-pill ${getPriorityClass(item.priority)}">
+                    ${escapeHTML(item.priority)}
+                </span>
+            </td>
+
+            <td>
+                <span class="status-pill ${getRequestStatusClass(item.status)}">
+                    ${escapeHTML(item.status)}
+                </span>
+            </td>
+
+            <td>${escapeHTML(item.tanker_id || "Not assigned")}</td>
+
+            <td>
+                <div class="action-buttons">
+                    <button class="small-btn"
+                            onclick="updateRequestStatus(${item.id}, 'Assigned')">
+                        Assign
+                    </button>
+
+                    <button class="small-btn"
+                            onclick="openTrackingForRequest(${item.id})">
+                        Track
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join("");
+}
+
+
+function renderOverviewEmergency() {
+    const container = document.getElementById("overviewEmergency");
+
+    if (!emergencyRecords.length) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div>⚑</div>
+                <p>No emergency requests have been submitted.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = emergencyRecords.slice(0, 5).map(item => `
+        <div class="request-item">
+            <div class="request-item-icon">💧</div>
+
+            <div class="request-item-info">
+                <strong>${escapeHTML(item.area)}, ${escapeHTML(item.district)}</strong>
+                <small>Request #${item.id} · ${numberFormat(item.required_quantity)} units</small>
+            </div>
+
+            <span class="status-pill ${getRequestStatusClass(item.status)}">
+                ${escapeHTML(item.status)}
+            </span>
+        </div>
+    `).join("");
+}
+
+
+async function updateRequestStatus(id, status) {
+    try {
+        await fetchJSON(`/api/emergency-requests/${id}`, {
+            method: "PATCH",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({status})
+        });
+
+        await loadEmergencyRequests();
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+
+// ===================================================
+// TRANSPORT MAP
+// ===================================================
+
+function initializeRouteMap() {
+    const element = document.getElementById("routeMap");
+
+    if (!element || typeof L === "undefined") return;
+
+    if (!routeMap) {
+        routeMap = L.map("routeMap").setView([15.3173, 75.7139], 7);
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution: "&copy; OpenStreetMap contributors",
+                maxZoom: 19
+            }
+        ).addTo(routeMap);
+    }
+
+    setTimeout(() => routeMap.invalidateSize(), 100);
+}
+
+
+document.getElementById("routeForm").addEventListener(
+    "submit",
+    async function(event) {
+        event.preventDefault();
+
+        const source = document.getElementById("routeSource").value.trim();
+        const destination = document.getElementById("routeDestination").value.trim();
+
+        const resultBox = document.getElementById("routeResult");
+
+        resultBox.classList.remove("hidden");
+        resultBox.textContent = "Calculating road route...";
+
+        try {
+            const result = await fetchJSON("/api/route", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({source, destination})
+            });
+
+            currentRoute = result;
+
+            resultBox.innerHTML = `
+                <div class="route-metrics">
+                    <div>
+                        <small>Distance</small>
+                        <strong>${numberFormat(result.distance_km)} km</strong>
+                    </div>
+
+                    <div>
+                        <small>Estimated Journey</small>
+                        <strong>${numberFormat(result.duration_minutes)} min</strong>
+                    </div>
+
+                    <div>
+                        <small>Route</small>
+                        <strong>Road Network</strong>
+                    </div>
+                </div>
+
+                <p>${escapeHTML(result.message)}</p>
+            `;
+
+            drawRoute(result, false);
+
+        } catch (error) {
+            resultBox.textContent = error.message;
+        }
+    }
+);
+
+
+function drawRoute(result, tracking = false) {
+    if (!result || !result.geometry) return;
+
+    if (tracking) {
+        initializeTrackingMap();
+
+        if (trackingLayer) {
+            trackingMap.removeLayer(trackingLayer);
+        }
+
+        const coordinates = result.geometry.coordinates.map(
+            point => [point[1], point[0]]
+        );
+
+        trackingLayer = L.polyline(
+            coordinates,
+            {color: "#1677df", weight: 5}
+        ).addTo(trackingMap);
+
+        trackingMap.fitBounds(trackingLayer.getBounds(), {
+            padding: [30, 30]
+        });
+
+        return;
+    }
+
+    initializeRouteMap();
+
+    if (routeLayer) {
+        routeMap.removeLayer(routeLayer);
+    }
+
+    const coordinates = result.geometry.coordinates.map(
+        point => [point[1], point[0]]
+    );
+
+    routeLayer = L.polyline(
+        coordinates,
+        {color: "#1677df", weight: 5}
+    ).addTo(routeMap);
+
+    routeMap.fitBounds(routeLayer.getBounds(), {
+        padding: [30, 30]
+    });
+
+    L.marker(coordinates[0]).addTo(routeMap)
+        .bindPopup("Water Source");
+
+    L.marker(coordinates[coordinates.length - 1]).addTo(routeMap)
+        .bindPopup("Delivery Destination");
+}
+
+
+// ===================================================
+// TANKER TRACKING
+// ===================================================
+
+function initializeTrackingMap() {
+    const element = document.getElementById("trackingMap");
+
+    if (!element || typeof L === "undefined") return;
+
+    if (!trackingMap) {
+        trackingMap = L.map("trackingMap").setView([15.3173, 75.7139], 7);
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution: "&copy; OpenStreetMap contributors",
+                maxZoom: 19
+            }
+        ).addTo(trackingMap);
+    }
+
+    setTimeout(() => trackingMap.invalidateSize(), 100);
+}
+
+
+function populateTrackingSelect() {
+    const select = document.getElementById("trackingRequestSelect");
+    const previous = select.value;
+
+    select.innerHTML = `<option value="">Select request</option>`;
+
+    emergencyRecords.forEach(item => {
+        const option = document.createElement("option");
+
+        option.value = item.id;
+        option.textContent =
+            `#${item.id} - ${item.area}, ${item.district} (${item.status})`;
+
+        select.appendChild(option);
+    });
+
+    if (previous) select.value = previous;
+}
+
+
+async function loadTrackingList() {
+    await loadEmergencyRequests();
+}
+
+
+function openTrackingForRequest(id) {
+    navigateTo("tracking");
+
+    document.getElementById("trackingRequestSelect").value = id;
+
+    currentTrackingId = id;
+}
+
+
+async function startTracking() {
+    const requestId = document.getElementById(
+        "trackingRequestSelect"
+    ).value;
+
+    if (!requestId) {
+        alert("Please select an emergency request.");
+        return;
+    }
+
+    const emergency = emergencyRecords.find(
+        item => String(item.id) === String(requestId)
+    );
+
+    if (!emergency) {
+        alert("Emergency request not found.");
+        return;
+    }
+
+    if (!emergency.source_location || !emergency.destination_location) {
+        alert(
+            "This request needs both a water source and destination. " +
+            "Update the request with both locations first."
+        );
+        return;
+    }
+
+    try {
+        const result = await fetchJSON(
+            `/api/emergency-requests/${requestId}/tracking/start-demo`,
+            {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    source: emergency.source_location,
+                    destination: emergency.destination_location
+                })
+            }
+        );
+
+        currentTrackingId = Number(requestId);
+
+        alert(
+            "Demo tracking started for " + result.tanker_id +
+            ". This is simulated tracking, not actual GPS."
+        );
+
+        await loadEmergencyRequests();
+        await refreshTrackingDetails();
+
+        if (trackingRefreshTimer) {
+            clearInterval(trackingRefreshTimer);
+        }
+
+        trackingRefreshTimer = setInterval(
+            refreshTrackingDetails, 15000
+        );
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+
+async function refreshTrackingDetails() {
+    if (!currentTrackingId) return;
+
+    try {
+        const data = await fetchJSON(
+            `/api/emergency-requests/${currentTrackingId}/tracking`
+        );
+
+        renderTrackingDetails(data);
+
+        if (data.geometry) {
+            drawRoute(data, true);
+        }
+
+        if (data.current_position && trackingMap) {
+            const position = [
+                data.current_position.lat,
+                data.current_position.lon
+            ];
+
+            if (trackingMarker) {
+                trackingMarker.setLatLng(position);
+            } else {
+                trackingMarker = L.marker(position).addTo(trackingMap)
+                    .bindPopup("Simulated tanker position");
+            }
+        }
+
+        if (data.status === "Delivered") {
+            if (trackingRefreshTimer) {
+                clearInterval(trackingRefreshTimer);
+                trackingRefreshTimer = null;
+            }
+
+            await loadEmergencyRequests();
+        }
+
+    } catch (error) {
+        console.error("Tracking:", error);
+    }
+}
+
+
+function renderTrackingDetails(data) {
+    const container = document.getElementById("trackingCards");
+
+    const progress = Math.max(
+        0, Math.min(100, Number(data.progress_percentage || 0))
+    );
+
+    container.innerHTML = `
+        <div class="tracking-card">
+
+            <div class="tracking-card-heading">
+                <div>
+                    <small>EMERGENCY REQUEST #${data.request_id}</small>
+                    <h3>${escapeHTML(data.tanker_id || "Tanker not assigned")}</h3>
+                </div>
+
+                <span class="status-pill ${getRequestStatusClass(data.status)}">
+                    ${escapeHTML(data.status)}
+                </span>
+            </div>
+
+            <div class="tracking-progress">
+                <div class="tracking-progress-label">
+                    <span>Journey progress</span>
+                    <strong>${numberFormat(progress)}%</strong>
+                </div>
+
+                <div class="progress-track">
+                    <div class="progress-fill" style="width:${progress}%"></div>
+                </div>
+            </div>
+
+            <div class="tracking-metrics">
+                <div>
+                    <small>Total Distance</small>
+                    <strong>${numberFormat(data.total_distance_km)} km</strong>
+                </div>
+
+                <div>
+                    <small>Remaining Distance</small>
+                    <strong>${numberFormat(data.remaining_distance_km)} km</strong>
+                </div>
+
+                <div>
+                    <small>Estimated Time Remaining</small>
+                    <strong>${numberFormat(data.remaining_minutes)} min</strong>
+                </div>
+            </div>
+
+            <div class="tracking-route-details">
+                <p><strong>Source:</strong> ${escapeHTML(data.source || "Not recorded")}</p>
+                <p><strong>Destination:</strong> ${escapeHTML(data.destination || "Not recorded")}</p>
+                <p><strong>Tracking:</strong> ${escapeHTML(data.tracking_mode)}</p>
+            </div>
+
+            <div class="timeline">
+                <div class="${progress >= 0 ? "completed" : ""}">
+                    <span></span> Requested
+                </div>
+                <div class="${progress > 0 ? "completed" : ""}">
+                    <span></span> In Transit
+                </div>
+                <div class="${data.status === "Delivered" ? "completed" : ""}">
+                    <span></span> Delivered
+                </div>
+            </div>
+
+        </div>
+    `;
+}
+
+
+// ===================================================
+// DATASET UPLOAD
+// ===================================================
+
+document.getElementById("uploadForm").addEventListener(
+    "submit",
+    async function(event) {
+        event.preventDefault();
+
+        const fileInput = document.getElementById("datasetFile");
+
+        if (!fileInput.files.length) {
+            showMessage("uploadMessage", "Please select a file.", "error");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+
+        try {
+            const result = await fetchJSON("/api/upload-water-data", {
+                method: "POST",
+                body: formData
+            });
+
+            showMessage(
+                "uploadMessage",
+                `${result.message}. ${result.rows} rows found and ${result.water_records_imported} water records imported.`,
+                "success"
+            );
+
+            this.reset();
+
+            await loadDatasets();
+            await loadWaterData();
+            await loadDistricts();
+
+        } catch (error) {
+            showMessage("uploadMessage", error.message, "error");
+        }
+    }
+);
+
+
+async function loadAllData() {
+
+    await Promise.allSettled([
+        loadHealth(),
+        loadWaterData(),
+        loadDistricts(),
+        loadReservoirs(),
+        loadEmergencyRequests(),
+        loadDatasets(),
+        loadDataSourceInfo(),
+        loadPublicWaterData(),
+        loadPublicDataCatalogue()
+    ]);
+
+}
+
+// ===================================================
+// LOAD UPLOADED DATASET HISTORY
+// ===================================================
+
+async function loadDatasets() {
+
+    const tbody = document.getElementById("datasetTable");
+
+    try {
+
+        const response = await fetchJSON("/api/datasets");
+
+        const datasets = Array.isArray(response)
+            ? response
+            : (response.datasets || response.records || []);
+
+        if (!datasets.length) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty-cell">
+                        No datasets uploaded yet.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        tbody.innerHTML = datasets.map(item => {
+
+            const id = Number(item.id);
+
+            return `
+                <tr>
+                    <td>${id}</td>
+                    <td>${escapeHTML(item.filename || item.file_name || "—")}</td>
+                    <td>${numberFormat(item.rows || item.row_count || 0)}</td>
+                    <td>${formatDate(item.uploaded_at || item.created_at)}</td>
+                    <td>
+                        <button class="small-btn"
+                                onclick="viewDataset(${id})">
+                            View Analysis
+                        </button>
+                    </td>
+                </tr>
+            `;
+
+        }).join("");
+
+    } catch (error) {
+
+        console.error("Dataset history:", error);
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" class="empty-cell">
+                    Unable to load uploaded datasets.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+
+async function viewDataset(id) {
+    try {
+        const result = await fetchJSON(`/api/datasets/${id}/analysis`);
+
+        const summary = `
+Dataset: ${result.filename}
+Rows: ${result.rows}
+Columns: ${result.columns}
+Missing values: ${result.missing_values}
+
+Columns:
+${result.column_names.join(", ")}
+
+Numeric summary:
+${JSON.stringify(result.numeric_summary, null, 2)}
+        `;
+
+        alert(summary);
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+
+// ===================================================
+// DATA SOURCE INFORMATION
+// ===================================================
+
+async function loadDataSourceInfo() {
+    const container = document.getElementById("dataSourceInfo");
+
+    try {
+        const data = await fetchJSON("/api/live-data-status");
+
+        const entries = [
+            ["Database", data.database],
+            ["Weather", data.weather],
+            ["Road Routing", data.road_routing],
+            ["Reservoir Data", data.reservoir_data],
+            ["Physical Sensors", data.water_sensors],
+            ["Smart Meters", data.smart_meters],
+            ["KWRIS API", data.kwris_api],
+            ["Vehicle GPS", data.gps_tracking],
+            ["Demo Tracking", data.demo_tracking]
+        ];
+
+        container.innerHTML = entries.map(item => `
+            <div class="source-item">
+                <span>${escapeHTML(item[0])}</span>
+                <strong>${escapeHTML(item[1])}</strong>
+            </div>
+        `).join("");
+
+    } catch (error) {
+        container.textContent = "Unable to retrieve source information.";
+    }
+}
+
+
+
+// ===================================================
+// PUBLIC GOVERNMENT WATER DATA
+// ===================================================
+
+function getObservationDate(item) {
+
+    return (
+        item.monitoring_date ||
+        item.observation_date ||
+        item.date ||
+        item.record_date ||
+        item.timestamp ||
+        item.last_updated ||
+        item.updated_at ||
+        null
+    );
+
+}
+
+
+function getRefreshLabel(seconds) {
+
+    const value = Number(seconds || 0);
+
+    if (!value) return "Not specified";
+
+    if (value < 3600) {
+        return Math.round(value / 60) + " minutes";
+    }
+
+    return Math.round(value / 3600) + " hours";
+
+}
+
+
+function getReservoirDistrict(item) {
+
+    const district = item.district || item.District;
+
+    if (district && district !== "Not provided") {
+        return district;
+    }
+
+    const name = String(
+        item.reservoir ||
+        item.reservoir_name ||
+        ""
+    ).toLowerCase();
+
+    if (name.includes("almatti")) {
+        return "Vijayapura";
+    }
+
+    return "District unavailable";
+
+}
+
+
+// Choose one alert per reservoir.
+// Prefer the record with the newest observation date.
+// If no date is supplied, do not claim that the value is today's reading.
+
+function getUniqueReservoirAlerts(alerts) {
+
+    const grouped = new Map();
+
+    alerts.forEach((item, index) => {
+
+        const name = (
+            item.reservoir ||
+            item.reservoir_name ||
+            "Unknown Reservoir"
+        ).trim();
+
+        const key = name.toLowerCase();
+
+        const date = getObservationDate(item);
+
+        const current = grouped.get(key);
+
+        if (!current) {
+
+            grouped.set(key, {
+                ...item,
+                _date: date,
+                _index: index
+            });
+
+            return;
+        }
+
+        if (date && current._date) {
+
+            if (new Date(date) > new Date(current._date)) {
+                grouped.set(key, {
+                    ...item,
+                    _date: date,
+                    _index: index
+                });
+            }
+
+        } else if (date && !current._date) {
+
+            grouped.set(key, {
+                ...item,
+                _date: date,
+                _index: index
+            });
+
+        } else if (!date && !current._date) {
+
+            // Retain the last returned item, but its date remains unknown.
+            grouped.set(key, {
+                ...item,
+                _date: null,
+                _index: index
+            });
+
+        }
+
+    });
+
+    return Array.from(grouped.values());
+
+}
+
+
+// ===================================================
+// LOAD PUBLIC RESERVOIR DATA
+// ===================================================
+
+async function loadPublicWaterData() {
+
+    const container = document.getElementById("governmentAlerts");
+
+    const status = document.getElementById("governmentDataStatus");
+
+    try {
+
+        const data = await fetchJSON("/api/public-water-data");
+
+        publicWaterResponse = data || {};
+
+        const alerts = Array.isArray(data.alerts)
+            ? data.alerts
+            : [];
+
+        governmentAlerts = getUniqueReservoirAlerts(alerts);
+
+        renderGovernmentAlerts();
+
+        const highCount = governmentAlerts.filter(
+            item => String(item.severity || "").toLowerCase() === "high"
+        ).length;
+
+        document.getElementById("governmentAlertCount").textContent =
+            governmentAlerts.length;
+
+        document.getElementById("governmentHighAlerts").textContent =
+            highCount;
+
+        status.innerHTML = `
+            <span>✓</span>
+            Public reservoir data successfully retrieved.
+            ${alerts.length} returned alerts grouped into
+            ${governmentAlerts.length} reservoir entries.
+        `;
+
+        status.className = "info-banner";
+
+    } catch (error) {
+
+        console.error("Public reservoir data:", error);
+
+        status.textContent =
+            "Government reservoir data is currently unavailable: " +
+            error.message;
+
+        container.innerHTML = `
+            <div class="empty-state">
+                <div>⚠</div>
+                <h3>Unable to load government reservoir data</h3>
+                <p>${escapeHTML(error.message)}</p>
+            </div>
+        `;
+
+    }
+
+}
+
+
+// ===================================================
+// RENDER PUBLIC RESERVOIR ALERTS
+// ===================================================
+
+function renderGovernmentAlerts() {
+
+    const container = document.getElementById("governmentAlerts");
+
+    if (!governmentAlerts.length) {
+
+        container.innerHTML = `
+            <div class="empty-state">
+                <div>🏞</div>
+                <h3>No reservoir alerts available</h3>
+                <p>No alert records were returned by the public-data endpoint.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML = governmentAlerts.map(item => {
+
+        const reservoir =
+            item.reservoir ||
+            item.reservoir_name ||
+            "Unknown Reservoir";
+
+        const percentage = Number(item.storage_percentage);
+
+        const validPercentage =
+            Number.isFinite(percentage) &&
+            percentage >= 0 &&
+            percentage <= 100;
+
+        const severity = String(item.severity || "Unknown");
+
+        const observationDate = item._date
+            ? formatDate(item._date)
+            : "Not supplied by source";
+
+        const district = getReservoirDistrict(item);
+
+        const message = item.message || "No additional information.";
+
+        return `
+            <div class="reservoir-card">
+
+                <div class="reservoir-card-heading">
+                    <div class="reservoir-icon">🏞</div>
+
+                    <span class="status-pill ${
+                        severity.toLowerCase() === "high"
+                            ? "status-critical"
+                            : "status-medium"
+                    }">
+                        ${escapeHTML(severity)}
+                    </span>
+                </div>
+
+                <h3>${escapeHTML(reservoir)}</h3>
+
+                <p>${escapeHTML(district)}</p>
+
+                <div class="reservoir-progress-label">
+                    <span>Reported storage</span>
+
+                    <strong>
+                        ${validPercentage
+                            ? numberFormat(percentage) + "%"
+                            : "Not available"}
+                    </strong>
+                </div>
+
+                ${
+                    validPercentage
+                    ? `
+                        <div class="progress-track">
+                            <div class="progress-fill"
+                                 style="width:${percentage}%">
+                            </div>
+                        </div>
+                    `
+                    : ""
+                }
+
+                <div class="reservoir-details">
+                    <span>Observation date</span>
+                    <strong>${escapeHTML(observationDate)}</strong>
+                </div>
+
+                <p style="margin-top:12px;">
+                    ${escapeHTML(message)}
+                </p>
+
+                <small>
+                    Source: National Water Data Portal
+                </small>
+
+            </div>
+        `;
+
+    }).join("");
+
+}
+
+
+// ===================================================
+// LOAD PUBLIC DATA CATALOGUE
+// ===================================================
+
+async function loadPublicDataCatalogue() {
+
+    const tbody = document.getElementById("governmentDatasetTable");
+
+    const details = document.getElementById("governmentSourceDetails");
+
+    try {
+
+        const data = await fetchJSON("/api/public-data-catalogue");
+
+        publicCatalogue = Array.isArray(data.datasets)
+            ? data.datasets
+            : [];
+
+        document.getElementById("governmentDatasetCount").textContent =
+            publicCatalogue.length;
+
+        if (!publicCatalogue.length) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="empty-cell">
+                        No government datasets were returned.
+                    </td>
+                </tr>
+            `;
+
+            details.textContent = "No government datasets available.";
+
+            return;
+
+        }
+
+        tbody.innerHTML = publicCatalogue.map(item => {
+
+            return `
+                <tr>
+                    <td>
+                        <strong>${escapeHTML(item.name)}</strong>
+                    </td>
+
+                    <td>${escapeHTML(item.frequency)}</td>
+
+                    <td>${escapeHTML(item.description)}</td>
+
+                    <td>${escapeHTML(
+                        getRefreshLabel(item.refresh_seconds)
+                    )}</td>
+                </tr>
+            `;
+
+        }).join("");
+
+
+        details.innerHTML = publicCatalogue.map(item => {
+
+            return `
+                <div class="source-item">
+                    <span>${escapeHTML(item.name)}</span>
+
+                    <strong>
+                        ${escapeHTML(item.frequency)}
+                    </strong>
+
+                    <small>
+                        AquaAI check:
+                        ${escapeHTML(getRefreshLabel(item.refresh_seconds))}
+                    </small>
+                </div>
+            `;
+
+        }).join("");
+
+
+    } catch (error) {
+
+        console.error("Government catalogue:", error);
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" class="empty-cell">
+                    Unable to load government catalogue.
+                </td>
+            </tr>
+        `;
+
+        details.textContent =
+            "Government catalogue unavailable: " + error.message;
+
+    }
+
+}
+
+
+// ===================================================
+// AUTOMATIC PUBLIC DATA CHECK
+// ===================================================
+
+function startPublicDataRefresh() {
+
+    if (publicDataRefreshTimer) {
+        clearInterval(publicDataRefreshTimer);
+    }
+
+    // Check the backend cache every 15 minutes.
+    // The actual government observation frequency remains unchanged.
+
+    publicDataRefreshTimer = setInterval(() => {
+
+        loadPublicWaterData();
+        loadPublicDataCatalogue();
+
+    }, 15 * 60 * 1000);
+
+}
+
+
+// ===================================================
+// INITIAL PAGE LOAD
+// ===================================================
+
+document.addEventListener("DOMContentLoaded", function() {
+    if (sessionStorage.getItem("aquaai_entered") === "true") {
+        document.getElementById("welcomeScreen").classList.add("hidden");
+        document.getElementById("mainApp").classList.remove("hidden");
+        initializeDashboard();
+    }
+});
+
+</script>
+
+</body>
+</html>

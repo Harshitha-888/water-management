@@ -1,0 +1,92 @@
+[
+  {
+    "id": 5,
+    "filename": "karnataka_tanker_distribution_2026.csv",
+    "filepath": "",
+    "category": "Water distribution data",
+    "uploaded_at": "2026-11-15T08:14:36.238Z",
+    "row_count": 7,
+    "collection_ref": "transport_deliveries",
+    "block_ids": [
+      "blk_trn_000_ed455c",
+      "blk_trn_001_856c3e"
+    ]
+  },
+  {
+    "id": 4,
+    "filename": "karnataka_reservoir_levels_2026.csv",
+    "filepath": "",
+    "category": "Reservoir data",
+    "uploaded_at": "2026-11-13T08:14:36.238Z",
+    "row_count": 41,
+    "collection_ref": "reservoirs",
+    "block_ids": [
+      "blk_res_000_1e5086",
+      "blk_res_001_755979",
+      "blk_res_002_1f4104",
+      "blk_res_003_6f94a2",
+      "blk_res_004_58719a",
+      "blk_res_005_0ab36e",
+      "blk_res_006_33d817"
+    ]
+  },
+  {
+    "id": 3,
+    "filename": "karnataka_groundwater_tables_2026.csv",
+    "filepath": "",
+    "category": "Groundwater data",
+    "uploaded_at": "2026-11-14T08:14:36.237Z",
+    "row_count": 12,
+    "collection_ref": "dataset_files",
+    "block_ids": [
+      "blk_ds_002_9f90d5",
+      "blk_ds_003_9f97a6"
+    ]
+  },
+  {
+    "id": 2,
+    "filename": "karnataka_monsoon_rainfall_2026.csv",
+    "filepath": "",
+    "category": "Rainfall data",
+    "uploaded_at": "2026-11-15T08:14:36.237Z",
+    "row_count": 12,
+    "collection_ref": "dataset_files",
+    "block_ids": [
+      "blk_ds_000_8bdeea",
+      "blk_ds_001_8e20cf"
+    ]
+  },
+  {
+    "id": 1,
+    "filename": "karnataka_grid_baseline.csv",
+    "filepath": "",
+    "category": "Water consumption data",
+    "uploaded_at": "2026-11-16T08:14:36.225Z",
+    "row_count": 129,
+    "collection_ref": "water_records",
+    "block_ids": [
+      "blk_wr_000_542d37",
+      "blk_wr_001_1da0db",
+      "blk_wr_002_f54d31",
+      "blk_wr_003_79754c",
+      "blk_wr_004_b1e8b4",
+      "blk_wr_005_0c3f9e",
+      "blk_wr_006_866a67",
+      "blk_wr_007_7d9449",
+      "blk_wr_008_9eea91",
+      "blk_wr_009_e49dbd",
+      "blk_wr_010_318aa3",
+      "blk_wr_011_d3696f",
+      "blk_wr_012_4d11dd",
+      "blk_wr_013_bf213a",
+      "blk_wr_014_295f1e",
+      "blk_wr_015_051383",
+      "blk_wr_016_a49d52",
+      "blk_wr_017_c6c340",
+      "blk_wr_018_887f36",
+      "blk_wr_019_5c205a",
+      "blk_wr_020_f5bfd8",
+      "blk_wr_021_13814b"
+    ]
+  }
+]

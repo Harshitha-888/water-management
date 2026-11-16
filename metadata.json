@@ -1,0 +1,6 @@
+{
+  "name": "AquaAI — Distributed Water Resource Management",
+  "description": "Water Resource Management Distributed Storage and Retrieval System using MapReduce for monitoring demand, supply, reservoirs, and emergency distribution.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
